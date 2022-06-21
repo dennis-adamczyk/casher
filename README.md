@@ -1,34 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Casher
+
+Casher is a finance app (PWA) that categorizes your transactions and gives an overview of your expenses, income, subscriptions, and savings goals.
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Auth0 Configuration
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Create an API
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+For the **External API** page to work, you will need to [create an API](https://auth0.com/docs/authorization/apis) using the [management dashboard](https://manage.auth0.com/#/apis). This will give you an API Identifier that you can use in the `AUTH0_AUDIENCE` environment variable below. Then you will need to [add a permission](https://auth0.com/docs/get-started/dashboard/add-api-permissions) named `read:shows` to your API. To get your app to ask for that permission, include it in the value of the `AUTH0_SCOPE` environment variable.
 
-## Learn More
+If you do not wish to use an API or observe the API call working, you should not specify the `AUTH0_AUDIENCE` and `AUTH0_SCOPE` values in the next steps.
 
-To learn more about Next.js, take a look at the following resources:
+### Configure credentials
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project needs to be configured with your Auth0 Domain, Client ID and Client Secret for the authentication flow to work.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+To do this, first copy `.env.local.example` into a new file in the same folder called `.env.local`, and replace the values with your own Auth0 application credentials (see more info about [loading environmental variables in Next.js](https://nextjs.org/docs/basic-features/environment-variables)):
 
-## Deploy on Vercel
+```sh
+# A long secret value used to encrypt the session cookie
+AUTH0_SECRET='LONG_RANDOM_VALUE'
+# The base url of your application
+AUTH0_BASE_URL='http://localhost:3000'
+# The url of your Auth0 tenant domain
+AUTH0_ISSUER_BASE_URL='https://YOUR_AUTH0_DOMAIN.auth0.com'
+# Your Auth0 application's Client ID
+AUTH0_CLIENT_ID='YOUR_AUTH0_CLIENT_ID'
+# Your Auth0 application's Client Secret
+AUTH0_CLIENT_SECRET='YOUR_AUTH0_CLIENT_SECRET'
+# Your Auth0 API's Identifier
+# OMIT if you do not want to use the API part of the sample
+AUTH0_AUDIENCE='YOUR_AUTH0_API_IDENTIFIER'
+# The permissions your app is asking for
+# OMIT if you do not want to use the API part of the sample
+AUTH0_SCOPE='openid profile email read:shows'
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**Note**: Make sure you replace `AUTH0_SECRET` with your own secret (you can generate a suitable string using `openssl rand -hex 32` on the command line).
