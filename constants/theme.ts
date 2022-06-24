@@ -292,7 +292,7 @@ const theme: DefaultTheme = {
   colors: {
     ...styleSystem.colors,
     text: styleSystem.colors.white.default,
-    body: styleSystem.colors.gray[900],
+    body: styleSystem.colors.gray[100],
     primary: {
       ...styleSystem.colors.blue,
       default: styleSystem.colors.blue[500],

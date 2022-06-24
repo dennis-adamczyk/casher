@@ -3,12 +3,11 @@ import css from '@styled-system/css';
 import { FC, useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
 import styled from 'styled-components';
+import { margin, MarginProps } from 'styled-system';
 
-const OverviewWrapper = styled.section(
-  css({
-    marginBottom: 10,
-  }),
-);
+interface OverviewWrapperProps extends MarginProps {}
+
+const OverviewWrapper = styled.section<OverviewWrapperProps>(css({}), margin);
 
 const OverviewCard = styled.div(
   css({
@@ -170,9 +169,9 @@ const OverviewPopoutDetailsValue = styled.p(
   }),
 );
 
-interface MoneyOverviewProps {}
+interface MoneyOverviewProps extends OverviewWrapperProps {}
 
-const MoneyOverview: FC<MoneyOverviewProps> = () => {
+const MoneyOverview: FC<MoneyOverviewProps> = (props) => {
   const [open, setOpen] = useState(false);
 
   const openHeight = useRef(0);
@@ -183,7 +182,7 @@ const MoneyOverview: FC<MoneyOverviewProps> = () => {
   });
 
   return (
-    <OverviewWrapper>
+    <OverviewWrapper {...props}>
       <OverviewCard>
         <OverviewCardPreheading>Zur freien Verfügung</OverviewCardPreheading>
         <OverviewCardAmount>4.907,75 €</OverviewCardAmount>

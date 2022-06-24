@@ -1,6 +1,7 @@
 import css from '@styled-system/css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { rgba } from 'polished';
 import { FC, ReactElement } from 'react';
 import styled from 'styled-components';
 
@@ -19,7 +20,7 @@ const BottomTabNavigationItem = styled.a<BottomTabNavigationItemProps>(({ active
   }),
 );
 
-const BottomTabNavigationWrapper = styled.nav(
+const BottomTabNavigationWrapper = styled.nav(({ theme }) =>
   css({
     display: 'flex',
     flexDirection: 'row',
@@ -30,8 +31,9 @@ const BottomTabNavigationWrapper = styled.nav(
     right: 0,
     bottom: 0,
     height: 11,
-    backgroundColor: 'midnight.800',
+    backgroundColor: rgba(theme.colors.midnight[800], 0.96),
     color: 'white.default',
+    zIndex: 10,
   }),
 );
 

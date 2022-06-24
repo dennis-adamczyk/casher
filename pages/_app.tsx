@@ -7,7 +7,6 @@ import { ThemeProvider } from 'styled-components';
 import Header from '../components/layout/Header';
 import GlobalStyle from '../constants/globalStyles';
 import theme from '../constants/theme';
-import '../styles/globals.css';
 
 function App({ Component, pageProps }: AppProps) {
   return (

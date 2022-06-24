@@ -4,8 +4,9 @@ import logo from '@/assets/img/logo.svg';
 import styled from 'styled-components';
 import css from '@styled-system/css';
 import ProfilePicture from '../common/ProfilePicture';
+import { rgba } from 'polished';
 
-const HeaderWrapper = styled.header(
+const HeaderWrapper = styled.header(({ theme }) =>
   css({
     display: 'flex',
     flexDirection: 'row',
@@ -16,7 +17,8 @@ const HeaderWrapper = styled.header(
     paddingX: 4,
     paddingY: 2,
     height: 10,
-    backgroundColor: 'midnight.800',
+    backgroundColor: rgba(theme.colors.midnight[800], 0.96),
+    zIndex: 10,
   }),
 );
 

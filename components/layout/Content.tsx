@@ -6,7 +6,7 @@ interface ContentProps {}
 const Content = styled.div<ContentProps>(
   css({
     marginTop: 5,
-    marginBottom: 12,
+    paddingBottom: 12,
     paddingX: 4,
   }),
 );
