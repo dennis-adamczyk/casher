@@ -1,3 +1,4 @@
+import { rgba } from 'polished';
 import { DefaultTheme, StyleSystem } from 'styled-components';
 
 // -----------------------------------------------------------
@@ -47,6 +48,7 @@ declare module 'styled-components' {
     fonts: StyleList<string>;
     fontWeights: StyleList<number>;
     lineHeights: StyleList<number>;
+    letterSpacings: StyleList<string>;
     borderWidths: StyleList<number>;
     borderStyles: StyleList<string>;
     radii: StyleList<string>;
@@ -94,19 +96,19 @@ const colors: StyleSystem['colors'] = {
   black: {
     default: '#000',
     opacity: {
-      4: 'rgba(#000, 0.4)',
-      5: 'rgba(#000, 0.5)',
-      6: 'rgba(#000, 0.6)',
-      8: 'rgba(#000, 0.8)',
+      4: rgba('#000', 0.4),
+      5: rgba('#000', 0.5),
+      6: rgba('#000', 0.6),
+      8: rgba('#000', 0.8),
     },
   },
   white: {
     default: '#FFF',
     opacity: {
-      subtle8: 'rgba(#FFF, 0.08)',
-      1: 'rgba(#FFF, 0.1)',
-      7: 'rgba(#FFF, 0.7)',
-      9: 'rgba(#FFF, 0.9)',
+      subtle8: rgba('#FFF', 0.08),
+      1: rgba('#FFF', 0.1),
+      7: rgba('#FFF', 0.7),
+      9: rgba('#FFF', 0.9),
     },
   },
   gray: {
@@ -125,7 +127,7 @@ const colors: StyleSystem['colors'] = {
   red: {
     default: '#FE4B4B',
     opacity: {
-      1: 'rgba(#FE4B4B, 0.1)',
+      1: rgba('#FE4B4B', 0.1),
     },
   },
   midnight: {
@@ -203,12 +205,16 @@ const fonts = ['Poppins, sans-serif'] as StyleSystem['fonts'];
 
 const fontWeights = [200, 300, 400, 500, 600, 700] as StyleSystem['fontWeights'];
 
-[fontWeights.thin, fontWeights.light, fontWeights.normal, fontWeights.medium, fontWeights.semibold, fontWeights.bold] =
+[fontWeights.thin, fontWeights.light, fontWeights.normal, fontWeights.medium, fontWeights.semiBold, fontWeights.bold] =
   fontWeights;
 
 const lineHeights = [1.2, 1.4] as StyleSystem['lineHeights'];
 
 [lineHeights.normal, lineHeights.body] = lineHeights;
+
+const letterSpacings = ['0', '-0.01em', '0.03em'] as StyleSystem['letterSpacings'];
+
+[letterSpacings.none, letterSpacings.body, letterSpacings.large] = letterSpacings;
 
 // Border
 
@@ -231,7 +237,7 @@ const radii = [
   '50%',
 ] as StyleSystem['radii'];
 
-[, radii.thin, radii.small, radii.medium, radii.large, radii.extraLarge, radii.round] = radii;
+[, radii.thin, radii.small, radii.smaller, radii.normal, radii.large, radii.round] = radii;
 
 // Shadow
 const shadows = ['none'] as StyleSystem['shadows'];
@@ -268,6 +274,7 @@ const styleSystem: StyleSystem = {
   fonts,
   fontWeights,
   lineHeights,
+  letterSpacings,
   borderWidths,
   borderStyles,
   radii,

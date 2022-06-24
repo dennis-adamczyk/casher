@@ -25,6 +25,7 @@ const GlobalStyle = createGlobalStyle(({ theme }) =>
       lineHeight: 'normal',
       WebkitFontSmoothing: 'antialiased',
       MozOsxFontSmoothing: 'grayscale',
+      letterSpacing: 'body',
       display: 'flex',
       flexDirection: 'column',
     },
