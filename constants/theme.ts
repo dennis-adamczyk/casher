@@ -82,21 +82,6 @@ declare module 'styled-components' {
       error: ColorWithOpacity;
       primary: ColorScale & SemanticColor;
     };
-    // textStyles: {
-    //   display1: TextStyles;
-    //   display2: TextStyles;
-    //   display3: TextStyles;
-    //   display4: TextStyles;
-    //   display5: TextStyles;
-    //   bodyTitle: TextStyles;
-    //   large: TextStyles;
-    //   preheading: TextStyles;
-    //   preheadingSmall: TextStyles;
-    //   button: TextStyles;
-    //   body: TextStyles;
-    //   secondary: TextStyles;
-    //   small: TextStyles;
-    // };
   }
 }
 
@@ -236,9 +221,17 @@ const borderStyles = ['solid', 'dashed', 'dotted'] as StyleSystem['borderStyles'
 [borderStyles.normal, borderStyles.dashed, borderStyles.dotted] = borderStyles;
 
 // Radii
-const radii = [remSize(0), remSize(0.125), remSize(0.5), remSize(0.75), remSize(1), remSize(2)] as StyleSystem['radii'];
+const radii = [
+  remSize(0),
+  remSize(0.125),
+  remSize(0.5),
+  remSize(0.75),
+  remSize(1),
+  remSize(2),
+  '50%',
+] as StyleSystem['radii'];
 
-[, radii.thin, radii.small, radii.medium, radii.large, radii.extraLarge] = radii;
+[, radii.thin, radii.small, radii.medium, radii.large, radii.extraLarge, radii.round] = radii;
 
 // Shadow
 const shadows = ['none'] as StyleSystem['shadows'];
