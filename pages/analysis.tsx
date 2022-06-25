@@ -1,10 +1,11 @@
 import Content from '@/components/layout/Content';
 import Image from 'next/image';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import analysisIllustration from '@/assets/img/analysisIllustration.svg';
 import styled from 'styled-components';
 import css from '@styled-system/css';
 import AddButton from '@/components/common/AddButton';
+import AnalysisCard from '@/components/analysis/Card';
 
 const EmptyWrapper = styled.div(
   css({
@@ -49,19 +50,26 @@ const EmptyDescription = styled.p(
 interface AnalysisProps {}
 
 const Analysis: FC<AnalysisProps> = () => {
+  const [analysisModules, setAnalysisModules] = useState([{}]);
+
   return (
     <Content>
-      <EmptyWrapper>
-        <EmptyImageWrapper>
-          <Image src={analysisIllustration} alt="" layout="responsive" />
-        </EmptyImageWrapper>
-        <EmptyTitle>Füge Analysen hinzu, um deine Finanzen im Blick zu behalten</EmptyTitle>
-        <EmptyDescription>
-          Du kannst komplett selbst entscheiden, welche Informationen du sehen möchtest und wie sie angezeigt werden
-          sollen.
-        </EmptyDescription>
-        <AddButton>Neue Analyse</AddButton>
-      </EmptyWrapper>
+      {!analysisModules.length && (
+        <EmptyWrapper>
+          <EmptyImageWrapper>
+            <Image src={analysisIllustration} alt="" layout="responsive" />
+          </EmptyImageWrapper>
+          <EmptyTitle>Füge Analysen hinzu, um deine Finanzen im Blick zu behalten</EmptyTitle>
+          <EmptyDescription>
+            Du kannst komplett selbst entscheiden, welche Informationen du sehen möchtest und wie sie angezeigt werden
+            sollen.
+          </EmptyDescription>
+          <AddButton>Neue Analyse</AddButton>
+        </EmptyWrapper>
+      )}
+      {analysisModules.length && (
+        <AnalysisCard name="Wofür gebe ich mein Geld aus?" subtitle="letzte 30 Tage"></AnalysisCard>
+      )}
     </Content>
   );
 };
