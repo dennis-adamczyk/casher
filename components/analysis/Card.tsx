@@ -19,7 +19,7 @@ const AnalysisCardWrapper = styled.article(
 const AnalysisCardContent = styled.div(
   css({
     paddingX: 3,
-    paddingTop: 4,
+    paddingY: 4,
   }),
 );
 

@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import css from '@styled-system/css';
 import AddButton from '@/components/common/AddButton';
 import AnalysisCard from '@/components/analysis/Card';
+import AnalysisPieChart from '@/components/analysis/Pie';
 
 const EmptyWrapper = styled.div(
   css({
@@ -68,7 +69,9 @@ const Analysis: FC<AnalysisProps> = () => {
         </EmptyWrapper>
       )}
       {analysisModules.length && (
-        <AnalysisCard name="Wofür gebe ich mein Geld aus?" subtitle="letzte 30 Tage"></AnalysisCard>
+        <AnalysisCard name="Wofür gebe ich mein Geld aus?" subtitle="letzte 30 Tage">
+          <AnalysisPieChart />
+        </AnalysisCard>
       )}
     </Content>
   );
