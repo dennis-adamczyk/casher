@@ -5,16 +5,6 @@ import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
 import AddGoalButton from '@/components/common/AddButton';
 
-const EmptyWrapper = styled.div(
-  css({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'normal',
-    alignItems: 'stretch',
-    height: '100%',
-  }),
-);
-
 const GoalTitle = styled.h2(
   css({
     fontSize: 5,
@@ -22,6 +12,7 @@ const GoalTitle = styled.h2(
     lineHeight: 'body',
     marginTop: 6,
     marginBottom: 10,
+    color: 'body',
   }),
 );
 

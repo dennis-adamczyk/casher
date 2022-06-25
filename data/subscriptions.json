@@ -4,7 +4,7 @@
         "amount": 4.99,
         "bankAccountId": 0,
         "categoryId": 0,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 1,
@@ -12,7 +12,7 @@
         "amount": 17.99,
         "bankAccountId": 0,
         "categoryId": 0,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 2,
@@ -20,7 +20,7 @@
         "amount": 20.99,
         "bankAccountId": 1,
         "categoryId": 1,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 3,
@@ -28,7 +28,7 @@
         "amount": 1799.99,
         "bankAccountId": 2,
         "categoryId": 2,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 4,
@@ -36,7 +36,7 @@
         "amount": 399.99,
         "bankAccountId": 2,
         "categoryId": 2,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 5,
@@ -44,7 +44,7 @@
         "amount": 9.99,
         "bankAccountId": 3,
         "categoryId": 3,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 6,
@@ -52,7 +52,7 @@
         "amount": 7.99,
         "bankAccountId": 1,
         "categoryId": 3,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 7,
@@ -60,7 +60,7 @@
         "amount": 39.99,
         "bankAccountId": 2,
         "categoryId": 4,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 8,
@@ -68,7 +68,7 @@
         "amount": 54.35,
         "bankAccountId": 2,
         "categoryId": 4,
-        "intervall": "yearly"
+        "interval": "yearly"
     },
     {
         "id": 9,
@@ -76,7 +76,7 @@
         "amount": 4.99,
         "bankAccountId": 2,
         "categoryId": 4,
-        "intervall": "monthly"
+        "interval": "monthly"
     },
     {
         "id": 10,
@@ -84,6 +84,6 @@
         "amount": 89.99,
         "bankAccountId": 2,
         "categoryId": 0,
-        "intervall": "yearly"
+        "interval": "yearly"
     }
 ]

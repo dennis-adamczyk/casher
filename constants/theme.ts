@@ -107,6 +107,7 @@ const colors: StyleSystem['colors'] = {
     opacity: {
       subtle8: rgba('#FFF', 0.08),
       1: rgba('#FFF', 0.1),
+      5: rgba('#FFF', 0.5),
       7: rgba('#FFF', 0.7),
       9: rgba('#FFF', 0.9),
     },
@@ -292,7 +293,7 @@ const theme: DefaultTheme = {
   colors: {
     ...styleSystem.colors,
     text: styleSystem.colors.white.default,
-    body: styleSystem.colors.gray[100],
+    body: styleSystem.colors.gray[50] as string,
     primary: {
       ...styleSystem.colors.blue,
       default: styleSystem.colors.blue[500],
