@@ -6,7 +6,8 @@ import styled from 'styled-components';
 import css from '@styled-system/css';
 import AddButton from '@/components/common/AddButton';
 import AnalysisCard from '@/components/analysis/Card';
-import AnalysisPieChart from '@/components/analysis/Pie';
+import AnalysisPieChart, { AnalysisPieChartProps } from '@/components/analysis/Pie';
+import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
 
 const EmptyWrapper = styled.div(
   css({
@@ -48,10 +49,26 @@ const EmptyDescription = styled.p(
   }),
 );
 
-interface AnalysisProps {}
+interface AnalysisDataPie {
+  id: number,
+  bankAccountId: 0,
+  type: "pie",
+  name: string,
+  data: AnalysisPieChartProps["data"]
+}
 
-const Analysis: FC<AnalysisProps> = () => {
-  const [analysisModules, setAnalysisModules] = useState([{}]);
+interface AnalysisDataLine {
+  id: number,
+  bankAccountId: 0,
+  type: "line",
+  name: string,
+  data: AnalysisLineChartProps["data"]
+}
+
+type AnalysisData = AnalysisDataLine | AnalysisDataPie
+
+const Analysis: FC<{ analyses: AnalysisData[] }> = ({analyses}) => {
+  const [analysisModules, setAnalysisModules] = useState(analyses);
 
   return (
     <Content>
@@ -68,13 +85,23 @@ const Analysis: FC<AnalysisProps> = () => {
           <AddButton>Neue Analyse</AddButton>
         </EmptyWrapper>
       )}
-      {analysisModules.length && (
-        <AnalysisCard name="Wofür gebe ich mein Geld aus?" subtitle="letzte 30 Tage">
-          <AnalysisPieChart data={{}} />
-        </AnalysisCard>
-      )}
+      { analysisModules.map((analysis)=>(<AnalysisCard 
+        key={analysis.id} 
+        name={analysis.name}  
+        >
+        { analysis.type === "pie" ? <AnalysisPieChart data={analysis.data} /> : <AnalysisLineChart data={analysis.data}></AnalysisLineChart>}
+        
+      </AnalysisCard>))}
     </Content>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  const res = await fetch(`http://localhost:3000/api/analysis`);
+  const data: AnalysisData[] = await res.json();
+  return {
+    props: { analyses: data },
+  };
+}
 
 export default Analysis;
