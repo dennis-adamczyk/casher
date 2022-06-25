@@ -9,7 +9,7 @@ interface BottomTabNavigationItemProps {
   active?: boolean;
 }
 
-const BottomTabNavigationItem = styled.a<BottomTabNavigationItemProps>(({ active }) =>
+const BottomTabNavigationItem = styled.a<BottomTabNavigationItemProps>(({ theme, active }) =>
   css({
     flexBasis: '100%',
     display: 'flex',
@@ -17,6 +17,9 @@ const BottomTabNavigationItem = styled.a<BottomTabNavigationItemProps>(({ active
     justifyContent: 'center',
     alignItems: 'center',
     opacity: active ? 1 : 0.5,
+    transitionDuration: theme.transitions.duration.short,
+    transitionProperty: 'opacity',
+    transitionTimingFunction: theme.transitions.timingFunction.normal,
   }),
 );
 

@@ -1,20 +1,12 @@
+import AddAcountButton from '@/components/common/AddButton';
 import BankCard from '@/components/common/BankCard';
 import MoneyOverview from '@/components/common/MoneyOverview';
 import Content from '@/components/layout/Content';
-import Button from '@/components/ui/Button';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
-import { Plus } from 'react-feather';
 import styled from 'styled-components';
 
 const AccountsSection = styled.section(css({}));
-
-const AddAcountButton = styled(Button).attrs({ bg: 'midnight.500', iconBefore: <Plus />, block: true })(
-  css({
-    marginTop: 5,
-    marginX: 'auto',
-  }),
-);
 
 const AccountsTitle = styled.h2(
   css({

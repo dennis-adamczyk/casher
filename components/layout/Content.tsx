@@ -8,6 +8,7 @@ const Content = styled.div<ContentProps>(
     marginTop: 5,
     paddingBottom: 12,
     paddingX: 4,
+    flexGrow: 1,
   }),
 );
 
