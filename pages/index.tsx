@@ -47,7 +47,7 @@ export async function getServerSideProps(context: any) {
   const res = await fetch(`http://localhost:3000/api/cards`);
   const data: BankCardData[] = await res.json();
   return {
-    props: { cards: data }, // will be passed to the page component as props
+    props: { cards: data },
   };
 }
 

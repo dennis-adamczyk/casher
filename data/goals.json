@@ -1,0 +1,28 @@
+[{
+    "id": 0,
+    "bankAccountId": 0,
+    "emojiIcon": "🌍",
+    "name": "Urlaub",
+    "targetAmount": 3000,
+    "amount": 1500,
+    "savingIntervall": "monthly",
+    "savingAmount": 500
+}, {
+    "id": 1,
+    "bankAccountId": 1,
+    "emojiIcon": "🚗",
+    "name": "Neues Auto",
+    "targetAmount": 29000,
+    "amount": 800,
+    "savingIntervall": "monthly",
+    "savingAmount": 800
+}, {
+    "id": 2,
+    "bankAccountId": 2,
+    "emojiIcon": "💻",
+    "name": "Laptop",
+    "targetAmount": 2500,
+    "amount": 1000,
+    "savingIntervall": "monthly",
+    "savingAmount": 200
+}]
