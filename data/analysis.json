@@ -1,0 +1,17 @@
+[{
+    "id": 0,
+    "bankAccountId": 0,
+    "type": "line",
+    "name": "Kontohistorie",
+    "data": {
+
+    }
+}, {
+    "id": 1,
+    "bankAccountId": 0,
+    "type": "pie",
+    "name": "Ausgabenkategorien",
+    "data": {
+
+    }
+}]
