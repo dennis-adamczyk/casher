@@ -104,9 +104,13 @@ const GoalCardProgressBarWrapper = styled.div(
   }),
 );
 
-const GoalCardProgressBar = styled.div(
+interface GoalCardProgressBarProps {
+  progress: number;
+}
+
+const GoalCardProgressBar = styled.div<GoalCardProgressBarProps>(({ progress }) =>
   css({
-    width: '22%',
+    width: `${progress * 100}%`,
     borderRadius: 'small',
     backgroundColor: 'blue.200',
   }),
@@ -124,6 +128,8 @@ const GoalCardIcon = styled(ChevronRight).attrs(({ theme }) => ({ color: theme.c
 interface GoalCardProps extends Pick<GoalData, 'name' | 'amount' | 'targetAmount' | 'emojiIcon'> {}
 
 const GoalCard: FC<GoalCardProps> = ({ name, amount, targetAmount, emojiIcon }) => {
+  const progress = amount / targetAmount;
+
   return (
     <GoalCardWrapper>
       <GoalCardContent>
@@ -139,7 +145,7 @@ const GoalCard: FC<GoalCardProps> = ({ name, amount, targetAmount, emojiIcon }) 
         </GoalCardTextWrapper>
       </GoalCardContent>
       <GoalCardProgressBarWrapper>
-        <GoalCardProgressBar />
+        <GoalCardProgressBar progress={progress} />
       </GoalCardProgressBarWrapper>
       <GoalCardIcon />
     </GoalCardWrapper>

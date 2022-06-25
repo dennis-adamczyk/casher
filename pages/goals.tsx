@@ -3,6 +3,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
+import AddGoalButton from '@/components/common/AddButton';
 
 const EmptyWrapper = styled.div(
   css({
@@ -14,15 +15,28 @@ const EmptyWrapper = styled.div(
   }),
 );
 
-const GoalTitle = styled.div(
+const GoalTitle = styled.h2(
   css({
-    fontSize: 'large',
+    fontSize: 5,
     fontWeight: 'semiBold',
-    marginBottom: 4,
+    lineHeight: 'body',
+    marginTop: 6,
+    marginBottom: 10,
   }),
 );
 
-const GoalsSection = styled.section(css({}));
+const GoalTitleSavingAmount = styled.span(
+  css({
+    color: 'blue.200',
+  }),
+);
+
+const GoalTitleSecondary = styled.span(
+  css({
+    display: 'block',
+    fontWeight: 'normal',
+  }),
+);
 
 export interface GoalData {
   id: number;
@@ -36,23 +50,22 @@ export interface GoalData {
 }
 
 const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {
-  console.log(goals);
   return (
     <Content>
-      <EmptyWrapper>
-        <GoalTitle>Deine Ziele</GoalTitle>
-        <GoalsSection>
-          {goals.map((goal) => (
-            <GoalCard
-              key={goal.id}
-              name={goal.name}
-              amount={goal.amount}
-              targetAmount={goal.targetAmount}
-              emojiIcon={goal.emojiIcon}
-            />
-          ))}
-        </GoalsSection>
-      </EmptyWrapper>
+      <GoalTitle>
+        Wir haben <GoalTitleSavingAmount>25,00 €</GoalTitleSavingAmount> gespart,
+        <GoalTitleSecondary>seit du das letzte mal geguckt hast</GoalTitleSecondary>
+      </GoalTitle>
+      {goals.map((goal) => (
+        <GoalCard
+          key={goal.id}
+          name={goal.name}
+          amount={goal.amount}
+          targetAmount={goal.targetAmount}
+          emojiIcon={goal.emojiIcon}
+        />
+      ))}
+      <AddGoalButton>Neues Sparziel</AddGoalButton>
     </Content>
   );
 };
