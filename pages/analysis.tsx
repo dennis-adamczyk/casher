@@ -57,7 +57,7 @@ interface AnalysisDataPie {
   data: AnalysisPieChartProps["data"]
 }
 
-interface AnalysisDataLine {
+export interface AnalysisDataLine {
   id: number,
   bankAccountId: 0,
   type: "line",

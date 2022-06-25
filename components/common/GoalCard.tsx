@@ -1,17 +1,22 @@
 import { formatCurrency } from '@/helpers/formatter';
 import { GoalData } from '@/pages/goals';
 import css from '@styled-system/css';
+import Link from 'next/link';
 import { FC } from 'react';
 import { ChevronRight } from 'react-feather';
 import styled from 'styled-components';
 
-const GoalCardWrapper = styled.article(
+interface GoalCardWrapperPros {
+  backgroundColor?: string
+}
+
+const GoalCardWrapper = styled.article<GoalCardWrapperPros>(({backgroundColor = 'midnight.400'})=>
   css({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'stretch',
-    backgroundColor: 'midnight.400',
+    backgroundColor: backgroundColor,
     borderRadius: 'normal',
     overflow: 'hidden',
     paddingX: 3,
@@ -125,30 +130,32 @@ const GoalCardIcon = styled(ChevronRight).attrs(({ theme }) => ({ color: theme.c
   }),
 );
 
-interface GoalCardProps extends Pick<GoalData, 'name' | 'amount' | 'targetAmount' | 'emojiIcon'> {}
+interface GoalCardProps extends Pick<GoalData, 'name' | 'amount' | 'targetAmount' | 'emojiIcon' | 'id'>, GoalCardWrapperPros {}
 
-const GoalCard: FC<GoalCardProps> = ({ name, amount, targetAmount, emojiIcon }) => {
+const GoalCard: FC<GoalCardProps> = ({ name, amount, targetAmount, emojiIcon, id, ...props}) => {
   const progress = amount / targetAmount;
 
   return (
-    <GoalCardWrapper>
-      <GoalCardContent>
-        <GoalCardEmojiWrapper>
-          <GoalCardEmojiIcon>{emojiIcon}</GoalCardEmojiIcon>
-        </GoalCardEmojiWrapper>
-        <GoalCardTextWrapper>
-          <GoalCardName>{name}</GoalCardName>
-          <GoalCardAmountWrapper>
-            <GoalCardAmount>{formatCurrency(amount)}</GoalCardAmount>
-            <GoalCardTargetAmount>/ {formatCurrency(targetAmount)}</GoalCardTargetAmount>
-          </GoalCardAmountWrapper>
-        </GoalCardTextWrapper>
-      </GoalCardContent>
-      <GoalCardProgressBarWrapper>
-        <GoalCardProgressBar progress={progress} />
-      </GoalCardProgressBarWrapper>
-      <GoalCardIcon />
-    </GoalCardWrapper>
+    <Link href={`/goals/${id}`} passHref>
+      <GoalCardWrapper {...props}>
+        <GoalCardContent>
+          <GoalCardEmojiWrapper>
+            <GoalCardEmojiIcon>{emojiIcon}</GoalCardEmojiIcon>
+          </GoalCardEmojiWrapper>
+          <GoalCardTextWrapper>
+            <GoalCardName>{name}</GoalCardName>
+            <GoalCardAmountWrapper>
+              <GoalCardAmount>{formatCurrency(amount)}</GoalCardAmount>
+              <GoalCardTargetAmount>/ {formatCurrency(targetAmount)}</GoalCardTargetAmount>
+            </GoalCardAmountWrapper>
+          </GoalCardTextWrapper>
+        </GoalCardContent>
+        <GoalCardProgressBarWrapper>
+          <GoalCardProgressBar progress={progress} />
+        </GoalCardProgressBarWrapper>
+          <GoalCardIcon />
+      </GoalCardWrapper>
+    </Link>
   );
 };
 

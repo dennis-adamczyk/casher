@@ -54,7 +54,7 @@ const BottomTabNavigation: FC<BottomTabNavigationProps> = ({ items }) => {
   return (
     <BottomTabNavigationWrapper>
       {items?.map((item) => (
-        <Link href={item.href} key={item.name}>
+        <Link href={item.href} passHref key={item.name}>
           <BottomTabNavigationItem title={item.name} active={item.href === pathname}>
             {item.icon}
           </BottomTabNavigationItem>

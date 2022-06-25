@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
 import AddGoalButton from '@/components/common/AddButton';
+import { AnalysisDataLine } from '../analysis';
 
 const EmptyWrapper = styled.div(
   css({
@@ -47,6 +48,7 @@ export interface GoalData {
   amount: number;
   savingIntervall: string;
   savingAmount: number;
+  data: AnalysisDataLine;
 }
 
 const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {
@@ -63,6 +65,7 @@ const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {
           amount={goal.amount}
           targetAmount={goal.targetAmount}
           emojiIcon={goal.emojiIcon}
+          id={goal.id}
         />
       ))}
       <AddGoalButton>Neues Sparziel</AddGoalButton>
