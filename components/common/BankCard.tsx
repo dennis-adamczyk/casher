@@ -125,6 +125,12 @@ type Bank = {
 };
 
 const banks = {
+  placeholder: {
+    name: 'Placeholder',
+    color: '#00ff62',
+    logo: sparkasseLogo,
+    textAlignment: 'baseline',
+  } as Bank,
   sparkasse: {
     name: 'Sparkasse',
     color: '#FE0000',
@@ -145,8 +151,10 @@ const banks = {
   } as Bank,
 };
 
+export type BankName = keyof typeof banks
+
 interface BankCardProps extends MarginProps {
-  bank: keyof typeof banks;
+  bank: BankName;
   bankName?: string;
   holder: string;
   iban: string;

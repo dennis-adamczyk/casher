@@ -1,0 +1,37 @@
+[{
+        "id": 0,
+        "bank": "sparkasse",
+        "bankName": "Sparkasse Duisburg",
+        "holder": "Max Mustermann",
+        "iban": "DE99 1234 5678 1234 5678 90",
+        "balance": 5239.34,
+        "effectiveBalance": 4907.75
+    },
+    {
+        "id": 1,
+        "bank": "volksbank",
+        "bankName": "Volksbank Niederrhein",
+        "holder": "Max Mustermann",
+        "iban": "DE99 1234 5678 1234 5678 90",
+        "balance": 2064.11,
+        "effectiveBalance": 1995.11
+    },
+    {
+        "id": 2,
+        "bank": "commerzbank",
+        "bankName": "commerzbank",
+        "holder": "Max Mustermann",
+        "iban": "DE99 1234 5678 1234 5678 90",
+        "balance": 112.34,
+        "effectiveBalance": 64.55
+    },
+    {
+        "id": -1,
+        "bank": "placeholder",
+        "bankName": "American Express",
+        "holder": "Max Mustermann",
+        "iban": "DE99 1234 5678 1234 5678 90",
+        "balance": 112.34,
+        "effectiveBalance": 64.55
+    }
+]
