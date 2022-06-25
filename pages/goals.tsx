@@ -20,33 +20,35 @@ const GoalTitle = styled.div(
     fontWeight: 'semiBold',
     marginBottom: 4,
   }),
-)
+);
 
 const GoalsSection = styled.section(css({}));
 
-interface GoalCardData {
-  id: number,
-  bankAccountId: number,
-  emojiIcon: string,
-  name: string,
-  targetAmount: number,
-  amount: number,
-  savingIntervall: string,
-  savingAmount: number
+export interface GoalData {
+  id: number;
+  bankAccountId: number;
+  emojiIcon: string;
+  name: string;
+  targetAmount: number;
+  amount: number;
+  savingIntervall: string;
+  savingAmount: number;
 }
 
-const Goals: FC<{ goals: GoalCardData[] }> = ({ goals }) => {
-  console.log(goals)
+const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {
+  console.log(goals);
   return (
     <Content>
       <EmptyWrapper>
         <GoalTitle>Deine Ziele</GoalTitle>
         <GoalsSection>
-          { goals.map((goal)=>(
+          {goals.map((goal) => (
             <GoalCard
               key={goal.id}
               name={goal.name}
-              subtitle={String(goal.savingAmount)}
+              amount={goal.amount}
+              targetAmount={goal.targetAmount}
+              emojiIcon={goal.emojiIcon}
             />
           ))}
         </GoalsSection>
@@ -57,11 +59,10 @@ const Goals: FC<{ goals: GoalCardData[] }> = ({ goals }) => {
 
 export default Goals;
 
-
 export async function getServerSideProps(context: any) {
-    const res = await fetch(`http://localhost:3000/api/goals`);
-    const data: GoalCardData[] = await res.json();
-    return {
-      props: { goals: data },
-    };
-  }
+  const res = await fetch(`http://localhost:3000/api/goals`);
+  const data: GoalData[] = await res.json();
+  return {
+    props: { goals: data },
+  };
+}

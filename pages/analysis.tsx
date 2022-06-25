@@ -70,7 +70,7 @@ const Analysis: FC<AnalysisProps> = () => {
       )}
       {analysisModules.length && (
         <AnalysisCard name="Wofür gebe ich mein Geld aus?" subtitle="letzte 30 Tage">
-          <AnalysisPieChart />
+          <AnalysisPieChart data={{}} />
         </AnalysisCard>
       )}
     </Content>
