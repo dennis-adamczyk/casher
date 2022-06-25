@@ -154,6 +154,7 @@ const banks = {
 export type BankName = keyof typeof banks;
 
 export interface BankCardData {
+  id: number;
   bank: BankName;
   bankName?: string;
   holder: string;
@@ -163,7 +164,7 @@ export interface BankCardData {
 }
 
 interface BankCardProps
-  extends Omit<BankCardData, 'balance' | 'effectiveBalance'>,
+  extends Omit<BankCardData, 'balance' | 'effectiveBalance' | 'id'>,
     Pick<Partial<BankCardData>, 'balance' | 'effectiveBalance'>,
     MarginProps {}
 
