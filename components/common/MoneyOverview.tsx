@@ -1,4 +1,5 @@
 import dropPattern from '@/assets/img/dropPattern.svg';
+import { formatCurrency, formatMonth } from '@/helpers/formatter';
 import css from '@styled-system/css';
 import { FC, useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
@@ -169,9 +170,20 @@ const OverviewPopoutDetailsValue = styled.p(
   }),
 );
 
-interface MoneyOverviewProps extends OverviewWrapperProps {}
+interface MoneyOverviewProps extends OverviewWrapperProps {
+  balance: number;
+  effectiveBalance?: number;
+  subscriptionAmount?: number;
+  savingAmount?: number;
+}
 
-const MoneyOverview: FC<MoneyOverviewProps> = (props) => {
+const MoneyOverview: FC<MoneyOverviewProps> = ({
+  balance,
+  effectiveBalance = balance,
+  subscriptionAmount = 0,
+  savingAmount = 0,
+  ...props
+}) => {
   const [open, setOpen] = useState(false);
 
   const openHeight = useRef(0);
@@ -181,30 +193,32 @@ const MoneyOverview: FC<MoneyOverviewProps> = (props) => {
     openHeight.current = popoutWrapper.current?.scrollHeight || 0;
   });
 
+  const subscriptionMonth = new Date();
+
   return (
     <OverviewWrapper {...props}>
       <OverviewCard>
         <OverviewCardPreheading>Zur freien Verfügung</OverviewCardPreheading>
-        <OverviewCardAmount>4.907,75 €</OverviewCardAmount>
+        <OverviewCardAmount>{formatCurrency(effectiveBalance)}</OverviewCardAmount>
       </OverviewCard>
       <OverviewPopoutWrapper ref={popoutWrapper} open={open} openHeight={openHeight.current}>
         <OverviewPopoutSummary onClick={() => setOpen((open) => !open)}>
           <OverviewPopoutLabel>Gesamtkontostand</OverviewPopoutLabel>
           <OverviewPopoutSummaryValueGroup>
-            <OverviewPopoutSummaryValue>5.239,34 €</OverviewPopoutSummaryValue>
+            <OverviewPopoutSummaryValue>{formatCurrency(balance)}</OverviewPopoutSummaryValue>
             <OverviewPopoutIcon open={open} />
           </OverviewPopoutSummaryValueGroup>
         </OverviewPopoutSummary>
         <OverviewPopoutDetails>
           <OverviewPopoutDetailsRow>
             <OverviewPopoutLabel>Sparbetrag</OverviewPopoutLabel>
-            <OverviewPopoutDetailsValue>145,45 €</OverviewPopoutDetailsValue>
+            <OverviewPopoutDetailsValue>{formatCurrency(savingAmount)}</OverviewPopoutDetailsValue>
           </OverviewPopoutDetailsRow>
           <OverviewPopoutDetailsRow>
             <OverviewPopoutLabel>
-              Abobetrag <OverviewPopoutLabelSecondary>im Juni</OverviewPopoutLabelSecondary>
+              Abobetrag <OverviewPopoutLabelSecondary>im {formatMonth(subscriptionMonth)}</OverviewPopoutLabelSecondary>
             </OverviewPopoutLabel>
-            <OverviewPopoutDetailsValue>186,14 €</OverviewPopoutDetailsValue>
+            <OverviewPopoutDetailsValue>{formatCurrency(subscriptionAmount)}</OverviewPopoutDetailsValue>
           </OverviewPopoutDetailsRow>
         </OverviewPopoutDetails>
       </OverviewPopoutWrapper>

@@ -1,5 +1,5 @@
 import AddAcountButton from '@/components/common/AddButton';
-import BankCard, {  BankName } from '@/components/common/BankCard';
+import BankCard, { BankCardData, BankName } from '@/components/common/BankCard';
 import MoneyOverview from '@/components/common/MoneyOverview';
 import Content from '@/components/layout/Content';
 import css from '@styled-system/css';
@@ -16,41 +16,26 @@ const AccountsTitle = styled.h2(
   }),
 );
 
-interface Card {
-  id: number;
-  bank: BankName;
-  bankName: string;
-  holder: string;
-  iban: string;
-  balance: number;
-  effectiveBalance: number;
-}
-
-const Home: NextPage<{cards: Card[]}> = (props) => {
-  let totalCash = 0
-  let usableCash = 0
-
-  props.cards.forEach((card: Card)=>{
-    totalCash += card.balance
-    usableCash += card.effectiveBalance
-  })
-  console.log(totalCash);
-  console.log(usableCash);
+const Home: NextPage<{ cards: BankCardData[] }> = ({ cards }) => {
+  const totalBalance = cards.reduce((total, current) => total + current.balance, 0);
+  const totalEffectiveBalance = cards.reduce((total, current) => total + current.effectiveBalance, 0);
 
   return (
     <Content>
-      <MoneyOverview marginBottom={10} />
+      <MoneyOverview marginBottom={10} balance={totalBalance} effectiveBalance={totalEffectiveBalance} />
       <AccountsSection>
         <AccountsTitle>Deine Konten</AccountsTitle>
-        { props.cards.map((card)=>(<BankCard
-          key={card.id}
-          bank={card.bank}
-          bankName={card.bankName}
-          holder={card.holder}
-          iban={card.iban}
-          balance={card.balance}
-          effectiveBalance={card.effectiveBalance}
-          />)) }
+        {cards.map((card) => (
+          <BankCard
+            key={card.id}
+            bank={card.bank}
+            bankName={card.bankName}
+            holder={card.holder}
+            iban={card.iban}
+            balance={card.balance}
+            effectiveBalance={card.effectiveBalance}
+          />
+        ))}
 
         <AddAcountButton>Neues Konto</AddAcountButton>
       </AccountsSection>
@@ -59,11 +44,11 @@ const Home: NextPage<{cards: Card[]}> = (props) => {
 };
 
 export async function getServerSideProps(context: any) {
-  const res = await fetch(`http://localhost:3000/api/cards`)
-  const data: Card[] = await res.json()
+  const res = await fetch(`http://localhost:3000/api/cards`);
+  const data: BankCardData[] = await res.json();
   return {
-    props: {cards: data}, // will be passed to the page component as props
-  }
+    props: { cards: data }, // will be passed to the page component as props
+  };
 }
 
 export default Home;

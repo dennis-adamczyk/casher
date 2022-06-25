@@ -151,16 +151,21 @@ const banks = {
   } as Bank,
 };
 
-export type BankName = keyof typeof banks
+export type BankName = keyof typeof banks;
 
-interface BankCardProps extends MarginProps {
+export interface BankCardData {
   bank: BankName;
   bankName?: string;
   holder: string;
   iban: string;
-  balance?: number;
-  effectiveBalance?: number;
+  balance: number;
+  effectiveBalance: number;
 }
+
+interface BankCardProps
+  extends Omit<BankCardData, 'balance' | 'effectiveBalance'>,
+    Pick<Partial<BankCardData>, 'balance' | 'effectiveBalance'>,
+    MarginProps {}
 
 const BankCard: FC<BankCardProps> = ({
   bank,
