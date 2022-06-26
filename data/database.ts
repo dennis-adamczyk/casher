@@ -66,8 +66,6 @@ export function getSubscriptions(): Promise<SubscriptionSQLData[]>{
     })
 }
 
-
-
 export interface SubscriptionWithCategorySQLData{
     id: number;
     name: string;
@@ -92,3 +90,23 @@ export function GetSubscriptionsWithCategory(): Promise<SubscriptionWithCategory
         })) 
     })
 } 
+
+export interface AnalysisSQLData {
+    id: number;
+    type: string;
+    bank_account_id: number;
+    name: string;
+    data: string;
+}
+
+export function GetAnalyses(): Promise<AnalysisSQLData[]> {
+    return new Promise((resolve, reject)=>{
+        db.all(`SELECT a.id, a.bank_account_id, a."type", a.name, ad."data" from Analyses a JOIN Analyses_Data ad ON a.analysis_data_id = ad.id;`, ((err, rows)=>{
+            if(err){
+                reject(err)
+            }else{                
+                resolve(rows)
+            }
+        })) 
+    })
+}
