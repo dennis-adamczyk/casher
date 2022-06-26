@@ -85,7 +85,7 @@ export interface CategoryData {
   name: string;
 }
 
-const Subscriptions: NextPage<{ data: [SubscriptionData, CategoryData][] }> = ({ data }) => {
+const Subscriptions: NextPage<{ data: [SubscriptionData, CategoryData][], totalSubscriptionCost: number }> = ({ data, totalSubscriptionCost}) => {
   const subscriptionCategories: (CategoryData & { subscriptions: SubscriptionData[] })[] = [];
   for (const [subscription, category] of data) {
     const subscriptionCategoryIndex = subscriptionCategories.findIndex(
@@ -130,11 +130,13 @@ const Subscriptions: NextPage<{ data: [SubscriptionData, CategoryData][] }> = ({
 };
 
 export async function getServerSideProps(context: any) {
-  const res = await fetch(`http://localhost:3000/api/subscriptionWithCategory`);
-  const data: [SubscriptionData, CategoryData][] = await res.json();
+  const [fetch1, fetch2] = await Promise.all([fetch(`http://localhost:3000/api/subscriptionWithCategory`), 
+                                              fetch(`http://localhost:3000/api/totalSubscriptions`)]);
+  const data1: [SubscriptionData, CategoryData][] = await fetch1.json();
+  const data2 = await fetch2.json();
 
   return {
-    props: { data },
+    props: { data1, data2 },
   };
 }
 
