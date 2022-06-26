@@ -5,6 +5,7 @@ import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
 import AddGoalButton from '@/components/common/AddButton';
 import { AnalysisDataLine } from '../analysis';
+import { interval } from '@/constants/interval';
 
 const GoalTitle = styled.h2(
   css({
@@ -37,7 +38,7 @@ export interface GoalData {
   name: string;
   targetAmount: number;
   amount: number;
-  savingIntervall: string;
+  savingIntervall: interval;
   savingAmount: number;
   data: AnalysisDataLine;
 }

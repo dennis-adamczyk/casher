@@ -49,9 +49,9 @@ const EmptyDescription = styled.p(
   }),
 );
 
-interface AnalysisDataPie {
+export interface AnalysisDataPie {
   id: number,
-  bankAccountId: 0,
+  bankAccountId: number,
   type: "pie",
   name: string,
   data: AnalysisPieChartProps["data"]
@@ -59,15 +59,17 @@ interface AnalysisDataPie {
 
 export interface AnalysisDataLine {
   id: number,
-  bankAccountId: 0,
+  bankAccountId: number,
   type: "line",
   name: string,
   data: AnalysisLineChartProps["data"]
 }
 
-type AnalysisData = AnalysisDataLine | AnalysisDataPie
+export type AnalysisData = AnalysisDataLine | AnalysisDataPie
 
 const Analysis: FC<{ analyses: AnalysisData[] }> = ({analyses}) => {
+  console.log(analyses);
+  
   const [analysisModules, setAnalysisModules] = useState(analyses);
 
   return (
@@ -99,6 +101,7 @@ const Analysis: FC<{ analyses: AnalysisData[] }> = ({analyses}) => {
 export async function getServerSideProps(context: any) {
   const res = await fetch(`http://localhost:3000/api/analysis`);
   const data: AnalysisData[] = await res.json();
+  console.log(data);
   return {
     props: { analyses: data },
   };
