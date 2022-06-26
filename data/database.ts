@@ -5,6 +5,17 @@ import { Database } from "sqlite3";
 const sqlite3 = require('sqlite3').verbose();
 const db: Database  = new sqlite3.Database('./casher.db');
 
+function promisifySQL<T>(sql: string){
+    return new Promise<T>((resolve, reject)=>{
+        db.all(sql,((err: any, rows: T)=>{
+            if(err){
+                reject(err)
+            }else{
+                resolve(rows)
+            }
+        }))
+    })
+}
 export interface BankCardSQLData {
     id: number;
     user_id: number;
@@ -17,15 +28,7 @@ export interface BankCardSQLData {
 }
 
 export function getAccounts(): Promise<BankCardSQLData[]>{
-    return new Promise((resolve, reject)=>{
-        db.all("SELECT * FROM ACCOUNTS;", ((err, rows)=>{
-            if(err){
-                reject(err)
-            }else{
-                resolve(rows)
-            }
-        })) 
-    })
+    return promisifySQL("SELECT * FROM ACCOUNTS;")
 }
 
 export interface CategorySQLData {
@@ -34,15 +37,7 @@ export interface CategorySQLData {
 }
 
 export function getCategories(): Promise<CategorySQLData[]>{
-    return new Promise((resolve, reject)=>{
-        db.all("SELECT * FROM CATEGORIES;", ((err, rows)=>{
-            if(err){
-                reject(err)
-            }else{
-                resolve(rows)
-            }
-        })) 
-    })
+    return promisifySQL("SELECT * FROM CATEGORIES;")
 }
 
 export interface SubscriptionSQLData {
@@ -55,16 +50,14 @@ export interface SubscriptionSQLData {
 }
 
 export function getSubscriptions(): Promise<SubscriptionSQLData[]>{
-    return new Promise((resolve, reject)=>{
-        db.all("SELECT * FROM SUBSCRIPTIONS;", ((err, rows)=>{
-            if(err){
-                reject(err)
-            }else{
-                resolve(rows)
-            }
-        })) 
-    })
+    return promisifySQL("SELECT * FROM SUBSCRIPTIONS;")
 }
+
+export function getSubscriptionsForBankAccount(pBankAccountId: number): Promise<SubscriptionSQLData[]>{
+    return promisifySQL(`SELECT * FROM SUBSCRIPTIONS WHERE bank_account_id=${pBankAccountId};`)
+}
+
+
 
 export interface SubscriptionWithCategorySQLData{
     id: number;
@@ -78,17 +71,11 @@ export interface SubscriptionWithCategorySQLData{
 }
 
 export function GetSubscriptionsWithCategory(): Promise<SubscriptionWithCategorySQLData[]> {
-    return new Promise((resolve, reject)=>{
-        db.all(`SELECT s.id, s.name, s.amount, s.category_id, s.bank_account_id, s."interval", c.id as cat_id, c.name as cat_name 
-                FROM Subscriptions s 
-                JOIN Categories c ON s.category_id =c.id;`, ((err, rows)=>{
-            if(err){
-                reject(err)
-            }else{
-                resolve(rows)
-            }
-        })) 
-    })
+    return promisifySQL(`SELECT s.id, s.name, s.amount, s.category_id, s.bank_account_id, 
+                        s."interval", c.id as cat_id, c.name as cat_name 
+                            FROM Subscriptions s 
+                            JOIN Categories c 
+                            ON s.category_id =c.id;`)
 } 
 
 export interface AnalysisSQLData {
@@ -100,15 +87,10 @@ export interface AnalysisSQLData {
 }
 
 export function GetAnalyses(): Promise<AnalysisSQLData[]> {
-    return new Promise((resolve, reject)=>{
-        db.all(`SELECT a.id, a.bank_account_id, a."type", a.name, ad."data" from Analyses a JOIN Analyses_Data ad ON a.analysis_data_id = ad.id;`, ((err, rows)=>{
-            if(err){
-                reject(err)
-            }else{                
-                resolve(rows)
-            }
-        })) 
-    })
+    return promisifySQL(`SELECT a.id, a.bank_account_id, a."type", a.name, ad."data" 
+                            FROM Analyses a 
+                            JOIN Analyses_Data ad 
+                            ON a.analysis_data_id = ad.id;`)
 }
 
 export interface GoalSQLData {
@@ -124,25 +106,27 @@ export interface GoalSQLData {
 }
 
 export function GetGoals(): Promise<GoalSQLData[]>{
-    return new Promise((resolve, reject)=>{
-        db.all(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, g.amount, g.savings_amount, g.savings_interval, ad."data" FROM Goals g JOIN Analyses_Data ad ON g.analysis_data_id = ad.id;`, ((err, rows)=>{
-            if(err){
-                reject(err)
-            }else{                
-                resolve(rows)
-            }
-        })) 
-    })
+    return promisifySQL(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
+                         g.amount, g.savings_amount, g.savings_interval, ad."data" 
+                            FROM Goals g 
+                            JOIN Analyses_Data ad 
+                            ON g.analysis_data_id = ad.id;`)
 }
 
 export function GetGoal(pId: number): Promise<GoalSQLData>{
-    return new Promise((resolve, reject)=>{
-        db.all(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, g.amount, g.savings_amount, g.savings_interval, ad."data" FROM Goals g JOIN Analyses_Data ad ON g.analysis_data_id = ad.id WHERE g.id = ${pId};`, ((err, rows)=>{
-            if(err){
-                reject(err)
-            }else{                
-                resolve(rows[0])
-            }
-        })) 
-    })
+    return promisifySQL(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
+                        g.amount, g.savings_amount, g.savings_interval, ad."data" 
+                            FROM Goals g 
+                            JOIN Analyses_Data ad 
+                            ON g.analysis_data_id = ad.id WHERE g.id = ${pId};`);
 }
+
+export function GetGoalsForBankAccount(pBankAccountId: number): Promise<GoalSQLData[]>{
+    return promisifySQL(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
+                        g.amount, g.savings_amount, g.savings_interval, ad."data" 
+                            FROM Goals g 
+                            JOIN Analyses_Data ad 
+                            ON g.analysis_data_id = ad.id 
+                            WHERE g.bank_account_id = ${pBankAccountId};`)
+}
+
