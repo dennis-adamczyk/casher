@@ -1,6 +1,7 @@
 import css from '@styled-system/css';
 import { FC } from 'react';
 import styled from 'styled-components';
+import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Select from '../ui/Select';
 
@@ -11,6 +12,14 @@ const AddFormTitle = styled.h1(
     fontSize: 5,
     fontWeight: 'semiBold',
     marginBottom: 5,
+  }),
+);
+
+const AddFormButtons = styled.div(
+  css({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   }),
 );
 
@@ -31,6 +40,26 @@ const AddForm: FC<AddFormProps> = ({ title }) => {
           { value: 1, label: 'jährlich' },
         ]}
       />
+      <Select
+        label="Konto"
+        options={[
+          { value: 0, label: 'Sparkasse Duisburg' },
+          { value: 1, label: 'Volksbank Niederrhein' },
+        ]}
+      />
+      <Select
+        label="Kategorie"
+        options={[
+          { value: 0, label: 'Streaming' },
+          { value: 1, label: 'Fitness' },
+        ]}
+      />
+      <AddFormButtons>
+        <Button bg="midnight.500" mr={4}>
+          Abbrechen
+        </Button>
+        <Button bg="primary.500">Speichern</Button>
+      </AddFormButtons>
     </AddFormWrapper>
   );
 };
