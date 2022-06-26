@@ -1,20 +1,19 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { GoalData } from '@/pages/goals';
-import { GetGoals, GoalSQLData } from '@/data/database';
+import { GetGoals } from '@/data/database';
 import { getIntervalMonthlyFactor } from '@/constants/interval';
+import { apiError } from '@/helpers/api-error-handler';
 const fs = require('fs').promises;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<number>) {
   if(process.env.USE_SQL === 'true'){
-    GetGoals()
-    .then((rows: GoalSQLData[]) => {
+    try {
+      let rows = await GetGoals()
       const totalBalance = rows.reduce((total, current) => total + current.savings_amount * getIntervalMonthlyFactor(current.savings_interval), 0);
-      res.status(200).json(totalBalance);
-    })
-    .catch((err) => {
-      res.status(401).json(err);
-    });
+      res.status(200).json(totalBalance);   
+    } catch (error) {
+      apiError(error, res)
+    }
   }else{
     const file = await fs.readFile('./data/goals.json');
     let goals: GoalData[] = JSON.parse(file);

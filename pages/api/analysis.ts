@@ -1,5 +1,5 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { AnalysisSQLData, GetAnalyses } from '@/data/database';
+import { apiError } from '@/helpers/api-error-handler';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { AnalysisData, AnalysisDataLine, AnalysisDataPie } from '../analysis';
 const fs = require('fs').promises;
@@ -7,7 +7,8 @@ const fs = require('fs').promises;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<AnalysisData[]>) {
   if (process.env.USE_SQL === 'true') {
-    GetAnalyses().then((rows: AnalysisSQLData[])=>{
+    try {
+      let rows = await GetAnalyses()
       const Anlyses: AnalysisData[] = rows.map((row:AnalysisSQLData)=>{
         let res: AnalysisData
         
@@ -20,8 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         }else{
           throw new Error("incorrect analsistype found");
         }
-
-        
+    
         res.id = row.id
         res.bankAccountId = row.bank_account_id
         res.name = row.name
@@ -29,10 +29,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return res;
       })
       res.status(200).json(Anlyses)
-    }).catch((err) => {
-      console.log(err);
-      res.status(401).json(err);
-    });
+    } catch (error) {
+      apiError(error, res)
+    }
+    
   }else{
     const file = await fs.readFile('./data/analysis.json');
     res.status(200).json(JSON.parse(file));
