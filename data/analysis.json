@@ -42,10 +42,10 @@
         "type": "pie",
         "name": "Ausgabenkategorien",
         "data": {
-            "labels": ["Essen", "Versicherungen", "Freizeit", "Fitness", "Wohnen", "Sparen"],
+            "labels": ["Streaming", "Fitness", "Wohnen", "Freizeit", "Versicherung", "Sparen"],
             "datasets": [{
                 "label": "# of Votes",
-                "data": [12, 19, 3, 5, 2, 3],
+                "data": [30.47, 20.99, 1833.32, 17.98, 49.51, 1500],
                 "backgroundColor": [
                     "rgba(255, 99, 132, 0.3)",
                     "rgba(54, 162, 235, 0.3)",
