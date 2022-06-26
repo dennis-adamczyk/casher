@@ -74,12 +74,6 @@ const Collapse: FC<CollapseProps> = ({ children, title, defaultOpen = false, ...
   const header = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log(
-      collapseWrapper.current,
-      collapseWrapper.current?.scrollHeight,
-      header.current,
-      header.current?.offsetHeight,
-    );
     setHeights({
       open: collapseWrapper.current?.scrollHeight || 0,
       close: header.current?.offsetHeight || 0,

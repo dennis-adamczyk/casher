@@ -85,7 +85,22 @@ export interface CategoryData {
   name: string;
 }
 
-const Subscriptions: NextPage<[SubscriptionData, CategoryData][]> = (props) => {
+const Subscriptions: NextPage<{ data: [SubscriptionData, CategoryData][] }> = ({ data }) => {
+  const subscriptionCategories: (CategoryData & { subscriptions: SubscriptionData[] })[] = [];
+  for (const [subscription, category] of data) {
+    const subscriptionCategoryIndex = subscriptionCategories.findIndex(
+      (subscriptionCategory) => subscriptionCategory.id === category.id,
+    );
+    if (subscriptionCategoryIndex === -1) {
+      subscriptionCategories.push({
+        ...category,
+        subscriptions: [subscription],
+      });
+    } else {
+      subscriptionCategories[subscriptionCategoryIndex].subscriptions.push(subscription);
+    }
+  }
+
   return (
     <Content>
       <SubscriptionsHeader>
@@ -96,36 +111,18 @@ const Subscriptions: NextPage<[SubscriptionData, CategoryData][]> = (props) => {
         </SubscriptionsTotalWrapper>
       </SubscriptionsHeader>
 
-      {/* <SubscriptionCollapse title="Streaming" defaultOpen>
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-      </SubscriptionCollapse>
-
-      <SubscriptionCollapse title="Fitness">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-      </SubscriptionCollapse>
-
-      <SubscriptionCollapse title="Versicherungen">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-      </SubscriptionCollapse>
-
-      <SubscriptionCollapse title="Sparen">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-      </SubscriptionCollapse>
-
-      <SubscriptionCollapse title="Freizeit">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-      </SubscriptionCollapse>
-
-      <SubscriptionCollapse title="Wohnen">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
-      </SubscriptionCollapse> */}
+      {subscriptionCategories.map((category, index) => (
+        <SubscriptionCollapse title={category.name} defaultOpen={index === 0} key={category.id}>
+          {category.subscriptions.map((subscription) => (
+            <SubscriptionCollapseCard
+              name={subscription.name}
+              amount={subscription.amount}
+              interval={subscription.interval}
+              key={subscription.id}
+            />
+          ))}
+        </SubscriptionCollapse>
+      ))}
 
       <AddSubscriptionButton>Neues Abo</AddSubscriptionButton>
     </Content>
@@ -135,7 +132,7 @@ const Subscriptions: NextPage<[SubscriptionData, CategoryData][]> = (props) => {
 export async function getServerSideProps(context: any) {
   const res = await fetch(`http://localhost:3000/api/subscriptionWithCategory`);
   const data: [SubscriptionData, CategoryData][] = await res.json();
-  
+
   return {
     props: { data },
   };
