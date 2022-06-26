@@ -6,12 +6,24 @@ const sqlite3 = require('sqlite3').verbose();
 const db: Database  = new sqlite3.Database('./casher.db');
 
 function promisifySQL<T>(sql: string){
-    return new Promise<T>((resolve, reject)=>{
-        db.all(sql,((err: any, rows: T)=>{
+    return new Promise<T[]>((resolve, reject)=>{
+        db.all(sql,((err: any, rows: T[])=>{
             if(err){
                 reject(err)
             }else{
                 resolve(rows)
+            }
+        }))
+    })
+}
+
+function promisifySQLSingleRow<T>(sql: string){
+    return new Promise<T>((resolve, reject)=>{
+        db.all(sql,((err: any, rows: T[])=>{
+            if(err){
+                reject(err)
+            }else{
+                resolve(rows[0])
             }
         }))
     })
@@ -114,11 +126,11 @@ export function GetGoals(): Promise<GoalSQLData[]>{
 }
 
 export function GetGoal(pId: number): Promise<GoalSQLData>{
-    return promisifySQL(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
-                        g.amount, g.savings_amount, g.savings_interval, ad."data" 
-                            FROM Goals g 
-                            JOIN Analyses_Data ad 
-                            ON g.analysis_data_id = ad.id WHERE g.id = ${pId};`);
+    return promisifySQLSingleRow(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
+                                 g.amount, g.savings_amount, g.savings_interval, ad."data" 
+                                    FROM Goals g 
+                                    JOIN Analyses_Data ad 
+                                    ON g.analysis_data_id = ad.id WHERE g.id = ${pId};`);
 }
 
 export function GetGoalsForBankAccount(pBankAccountId: number): Promise<GoalSQLData[]>{
