@@ -115,6 +115,8 @@ export interface GoalSQLData {
     savings_amount: number;
     savings_interval: number;
     data: string;
+    remaining_days?: number;
+    remaining_months?: number;
 }
 
 export function getGoals(): Promise<GoalSQLData[]>{
@@ -127,7 +129,7 @@ export function getGoals(): Promise<GoalSQLData[]>{
 
 export function getGoal(pId: number): Promise<GoalSQLData>{
     return promisifySQLSingleRow(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
-                                 g.amount, g.savings_amount, g.savings_interval, ad."data" 
+                                 g.amount, g.savings_amount, g.savings_interval, g.remaining_months, g.remaining_days, ad."data" 
                                     FROM Goals g 
                                     JOIN Analyses_Data ad 
                                     ON g.analysis_data_id = ad.id WHERE g.id = ${pId};`);

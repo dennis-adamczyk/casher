@@ -18,8 +18,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       result.savingAmount = row.savings_amount
       result.savingIntervall = row.savings_interval
       result.targetAmount = row.target_amount
-      result.data = JSON.parse(row.data)
+      result.remainingDays = row.remaining_days
+      result.remainingMonths = row.remaining_months
   
+      result.data = JSON.parse(row.data)
       res.status(200).json(result);
     } catch (error) {
       apiError(error, res)

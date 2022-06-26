@@ -148,7 +148,7 @@ const Goals: FC<{ goal: GoalData }> = ({ goal }) => {
       <AnalysisLineChart data={goal.data as {} as AnalysisLineChartProps["data"]}></AnalysisLineChart>
       <GoalRegularSpending>
         <GoalRegularSpendingText>{formatCurrency(goal.savingAmount)}</GoalRegularSpendingText>
-        <select>
+        <select defaultValue={"monthly"}>
             <option value="daily">Täglich</option>
             <option value="weekly">Wöchtenlich</option>
             <option value="monthly">Monatlich</option>
@@ -158,11 +158,11 @@ const Goals: FC<{ goal: GoalData }> = ({ goal }) => {
       <GoalExpectedFinishHeader>Vorraussichtlich wirst du dein Ziel erreichen in</GoalExpectedFinishHeader>
       <GoalExpectedFinisherTimerWrapper>
         <GoalExpectedFinisherTimerItem>
-            <GoalExpectedFinisherTimerItemTime>28</GoalExpectedFinisherTimerItemTime>
+            <GoalExpectedFinisherTimerItemTime>{goal.remainingMonths}</GoalExpectedFinisherTimerItemTime>
             <GoalExpectedFinisherTimerItemLabel>Monate</GoalExpectedFinisherTimerItemLabel>
         </GoalExpectedFinisherTimerItem>
         <GoalExpectedFinisherTimerItem>
-            <GoalExpectedFinisherTimerItemTime>14</GoalExpectedFinisherTimerItemTime>
+            <GoalExpectedFinisherTimerItemTime>{goal.remainingDays}</GoalExpectedFinisherTimerItemTime>
             <GoalExpectedFinisherTimerItemLabel>Tage</GoalExpectedFinisherTimerItemLabel>
         </GoalExpectedFinisherTimerItem>
       </GoalExpectedFinisherTimerWrapper>
