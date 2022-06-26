@@ -3,6 +3,7 @@ import Collapse from '@/components/common/Collapse';
 import SubscriptionCard from '@/components/common/SubscriptionCard';
 import Content from '@/components/layout/Content';
 import { interval } from '@/constants/interval';
+import { formatCurrency } from '@/helpers/formatter';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
 import styled from 'styled-components';
@@ -106,7 +107,7 @@ const Subscriptions: NextPage<{ data: [SubscriptionData, CategoryData][], totalS
       <SubscriptionsHeader>
         <SubscriptionsTitle>Regelmäßige Ausgaben</SubscriptionsTitle>
         <SubscriptionsTotalWrapper>
-          <SubscriptionsTotal>186,14 €</SubscriptionsTotal>
+          <SubscriptionsTotal>{formatCurrency(totalSubscriptionCost)}</SubscriptionsTotal>
           <SubscriptionsTotalInterval>monatlich</SubscriptionsTotalInterval>
         </SubscriptionsTotalWrapper>
       </SubscriptionsHeader>
@@ -136,7 +137,7 @@ export async function getServerSideProps(context: any) {
   const data2 = await fetch2.json();
 
   return {
-    props: { data1, data2 },
+    props: { data: data1, totalSubscriptionCost: data2 },
   };
 }
 

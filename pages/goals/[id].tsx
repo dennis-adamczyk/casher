@@ -5,8 +5,10 @@ import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
 import { GetServerSideProps } from 'next/types';
 import { GoalData } from '.';
-import AnalysisLineChart from '@/components/analysis/Line';
+import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
 import { formatCurrency } from '@/helpers/formatter';
+import { AnalysisDataLine } from '../analysis';
+import { ChartData } from 'chart.js';
 
 
 const GoalTitle = styled.h2(
@@ -143,7 +145,7 @@ const Goals: FC<{ goal: GoalData }> = ({ goal }) => {
           backgroundColor={'transparent'}
         />
       </GoalTitle>
-      <AnalysisLineChart data={goal.data.data}></AnalysisLineChart>
+      <AnalysisLineChart data={goal.data as {} as AnalysisLineChartProps["data"]}></AnalysisLineChart>
       <GoalRegularSpending>
         <GoalRegularSpendingText>{formatCurrency(goal.savingAmount)}</GoalRegularSpendingText>
         <select>
@@ -184,17 +186,19 @@ const Goals: FC<{ goal: GoalData }> = ({ goal }) => {
   );
 };
 
-export default Goals;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if(context.params){
     const res = await fetch(`http://localhost:3000/api/goals/${context.params["id"]}`);
-    const data: any = await res.json();
+    const data: GoalData = await res.json();
+    
     return {
-      props: { goal: data.goal },
+      props: { goal: data },
     };  
   }else{
     return {props: {goal: null}}
   }
   
 }
+
+export default Goals;

@@ -110,3 +110,39 @@ export function GetAnalyses(): Promise<AnalysisSQLData[]> {
         })) 
     })
 }
+
+export interface GoalSQLData {
+    id: number;
+    bank_account_id: number;
+    name: string;
+    emojiIcon: string;
+    target_amount: number;
+    amount: number;
+    savings_amount: number;
+    savings_interval: number;
+    data: string;
+}
+
+export function GetGoals(): Promise<GoalSQLData[]>{
+    return new Promise((resolve, reject)=>{
+        db.all(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, g.amount, g.savings_amount, g.savings_interval, ad."data" FROM Goals g JOIN Analyses_Data ad ON g.analysis_data_id = ad.id;`, ((err, rows)=>{
+            if(err){
+                reject(err)
+            }else{                
+                resolve(rows)
+            }
+        })) 
+    })
+}
+
+export function GetGoal(pId: number): Promise<GoalSQLData>{
+    return new Promise((resolve, reject)=>{
+        db.all(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, g.amount, g.savings_amount, g.savings_interval, ad."data" FROM Goals g JOIN Analyses_Data ad ON g.analysis_data_id = ad.id WHERE g.id = ${pId};`, ((err, rows)=>{
+            if(err){
+                reject(err)
+            }else{                
+                resolve(rows[0])
+            }
+        })) 
+    })
+}
