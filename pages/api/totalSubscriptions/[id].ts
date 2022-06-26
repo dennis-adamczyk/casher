@@ -1,5 +1,5 @@
 import { getIntervalMonthlyFactor } from '@/constants/interval';
-import { GetGoalsForBankAccount } from '@/data/database';
+import { getGoalsForBankAccount, getSubscriptionsForBankAccount } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const fs = require('fs').promises;
@@ -9,9 +9,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (process.env.USE_SQL === 'true') {
     try {
       let bankAccountId = parseInt(id as string, 10)
-      let rows = await GetGoalsForBankAccount(bankAccountId)
-      const totalBalance = rows.reduce((total, current) => total + current.savings_amount * getIntervalMonthlyFactor(current.savings_interval), 0);
-      res.status(200).json(totalBalance);   
+      let rows = await getSubscriptionsForBankAccount(bankAccountId)
+      const totalSubscriptions = rows.reduce((total, current) => total + current.amount * getIntervalMonthlyFactor(current.interval), 0);
+      res.status(200).json(totalSubscriptions);   
     } catch (error) {
       apiError(error, res)
     }
