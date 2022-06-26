@@ -82,7 +82,7 @@ export interface SubscriptionWithCategorySQLData{
     cat_name: string;
 }
 
-export function GetSubscriptionsWithCategory(): Promise<SubscriptionWithCategorySQLData[]> {
+export function getSubscriptionsWithCategory(): Promise<SubscriptionWithCategorySQLData[]> {
     return promisifySQL(`SELECT s.id, s.name, s.amount, s.category_id, s.bank_account_id, 
                         s."interval", c.id as cat_id, c.name as cat_name 
                             FROM Subscriptions s 
@@ -98,7 +98,7 @@ export interface AnalysisSQLData {
     data: string;
 }
 
-export function GetAnalyses(): Promise<AnalysisSQLData[]> {
+export function getAnalyses(): Promise<AnalysisSQLData[]> {
     return promisifySQL(`SELECT a.id, a.bank_account_id, a."type", a.name, ad."data" 
                             FROM Analyses a 
                             JOIN Analyses_Data ad 
@@ -117,7 +117,7 @@ export interface GoalSQLData {
     data: string;
 }
 
-export function GetGoals(): Promise<GoalSQLData[]>{
+export function getGoals(): Promise<GoalSQLData[]>{
     return promisifySQL(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
                          g.amount, g.savings_amount, g.savings_interval, ad."data" 
                             FROM Goals g 
@@ -125,7 +125,7 @@ export function GetGoals(): Promise<GoalSQLData[]>{
                             ON g.analysis_data_id = ad.id;`)
 }
 
-export function GetGoal(pId: number): Promise<GoalSQLData>{
+export function getGoal(pId: number): Promise<GoalSQLData>{
     return promisifySQLSingleRow(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
                                  g.amount, g.savings_amount, g.savings_interval, ad."data" 
                                     FROM Goals g 
@@ -133,7 +133,7 @@ export function GetGoal(pId: number): Promise<GoalSQLData>{
                                     ON g.analysis_data_id = ad.id WHERE g.id = ${pId};`);
 }
 
-export function GetGoalsForBankAccount(pBankAccountId: number): Promise<GoalSQLData[]>{
+export function getGoalsForBankAccount(pBankAccountId: number): Promise<GoalSQLData[]>{
     return promisifySQL(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
                         g.amount, g.savings_amount, g.savings_interval, ad."data" 
                             FROM Goals g 

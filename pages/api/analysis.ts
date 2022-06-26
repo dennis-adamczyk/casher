@@ -1,4 +1,4 @@
-import { AnalysisSQLData, GetAnalyses } from '@/data/database';
+import { AnalysisSQLData, getAnalyses } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { AnalysisData, AnalysisDataLine, AnalysisDataPie } from '../analysis';
@@ -8,7 +8,7 @@ const fs = require('fs').promises;
 export default async function handler(req: NextApiRequest, res: NextApiResponse<AnalysisData[]>) {
   if (process.env.USE_SQL === 'true') {
     try {
-      let rows = await GetAnalyses()
+      let rows = await getAnalyses()
       const Anlyses: AnalysisData[] = rows.map((row:AnalysisSQLData)=>{
         let res: AnalysisData
         

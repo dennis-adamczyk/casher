@@ -1,4 +1,4 @@
-import { GetGoals, GoalSQLData } from '@/data/database';
+import { getGoals, GoalSQLData } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import { GoalData } from '@/pages/goals';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   if (process.env.USE_SQL === 'true') {
     try {
-      let rows = await GetGoals();
+      let rows = await getGoals();
       
       const goals: GoalData[] = rows.map((row: GoalSQLData) => {
         let result = {} as GoalData

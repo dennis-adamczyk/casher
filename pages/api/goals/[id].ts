@@ -1,4 +1,4 @@
-import { GetGoal } from '@/data/database';
+import { getGoal } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import { GoalData } from '@/pages/goals';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const { id } = req.query;
   if (process.env.USE_SQL === 'true') {
     try {
-      let row = await GetGoal(parseInt(id as string, 10))
+      let row = await getGoal(parseInt(id as string, 10))
       let result = {} as GoalData
       result.id = row.id
       result.bankAccountId = row.bank_account_id
