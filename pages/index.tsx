@@ -5,7 +5,6 @@ import Content from '@/components/layout/Content';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
 import styled from 'styled-components';
-import { monthlySavingsData } from './api/monthlySavings';
 
 const AccountsSection = styled.section(css({}));
 
@@ -51,11 +50,11 @@ export async function getServerSideProps(context: any) {
     fetch(`http://localhost:3000/api/totalSubscriptions`)
   ])
   const data0: BankCardData[] = await fetch1.json();
-  const data1: monthlySavingsData = await fetch2.json();
+  const data1: number = await fetch2.json();
   const data2: number = await fetch3.json();
   
   return {
-    props: { cards: data0, monthlySavings: data1.monthlySavings, monthlySubscriptions: data2},
+    props: { cards: data0, monthlySavings: data1, monthlySubscriptions: data2},
   };
 }
 
