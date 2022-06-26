@@ -124,7 +124,7 @@ const Subscriptions: NextPage<{ data: [SubscriptionData, CategoryData][] }> = ({
         </SubscriptionCollapse>
       ))}
 
-      <AddSubscriptionButton>Neues Abo</AddSubscriptionButton>
+      <AddSubscriptionButton href="/subscriptions/new">Neues Abo</AddSubscriptionButton>
     </Content>
   );
 };
