@@ -131,7 +131,14 @@ const GoalPastSavingsItemRight = styled.div(
     })
 )
 
-const Goals: FC<{ goal: GoalData }> = ({ goal }) => {
+export type GoalHistory = GoalHistoryEntry[]
+
+export interface GoalHistoryEntry {
+    date: string;
+    value: number;
+}
+
+const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) => {
   return (
     <Content>
       <GoalTitle>      
@@ -168,20 +175,16 @@ const Goals: FC<{ goal: GoalData }> = ({ goal }) => {
       </GoalExpectedFinisherTimerWrapper>
       <br></br>
         <GoalPastSavingsHeader>Einzahlungen</GoalPastSavingsHeader>
-        <GoalPastSavingsItem>
-            <GoalPastSavingsItemLeft>{formatCurrency(50)}</GoalPastSavingsItemLeft>
-            <GoalPastSavingsItemRight>Heute</GoalPastSavingsItemRight>  
-        </GoalPastSavingsItem>
-        <br></br>
-        <GoalPastSavingsItem>
-            <GoalPastSavingsItemLeft>{formatCurrency(50)}</GoalPastSavingsItemLeft>
-            <GoalPastSavingsItemRight>Gestern</GoalPastSavingsItemRight>  
-        </GoalPastSavingsItem>
-        <br></br>
-        <GoalPastSavingsItem>
-            <GoalPastSavingsItemLeft>{formatCurrency(50)}</GoalPastSavingsItemLeft>
-            <GoalPastSavingsItemRight>Vorgestern</GoalPastSavingsItemRight>  
-        </GoalPastSavingsItem>
+        {history.reverse().map((value, index)=>(
+        <>{console.log(index)}
+        
+            <GoalPastSavingsItem key={index}>
+                    <GoalPastSavingsItemLeft>{formatCurrency(value.value)}</GoalPastSavingsItemLeft>
+                    <GoalPastSavingsItemRight>{value.date}</GoalPastSavingsItemRight>
+            </GoalPastSavingsItem>
+            <br></br>
+        </>
+        ))}
     </Content>
   );
 };
@@ -189,11 +192,13 @@ const Goals: FC<{ goal: GoalData }> = ({ goal }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if(context.params){
-    const res = await fetch(`http://localhost:3000/api/goals/${context.params["id"]}`);
-    const data: GoalData = await res.json();
+    const goalRes = await fetch(`http://localhost:3000/api/goals/${context.params["id"]}`);
+    const goalData: GoalData = await goalRes.json();
     
+    const historyRes = await fetch(`http://localhost:3000/api/goals/history/${goalData.historyId}`)
+    const historyData: GoalHistory = await historyRes.json()
     return {
-      props: { goal: data },
+      props: { goal: goalData, history: historyData },
     };  
   }else{
     return {props: {goal: null}}

@@ -41,6 +41,7 @@ export interface GoalData {
   savingIntervall: interval;
   savingAmount: number;
   data: AnalysisDataLine;
+  historyId: number;
   remainingDays?: number;
   remainingMonths?: number;
 }

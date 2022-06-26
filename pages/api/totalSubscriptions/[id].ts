@@ -1,5 +1,5 @@
 import { getIntervalMonthlyFactor } from '@/constants/interval';
-import { getGoalsForBankAccount, getSubscriptionsForBankAccount } from '@/data/database';
+import { getSubscriptionsForBankAccount } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const fs = require('fs').promises;
