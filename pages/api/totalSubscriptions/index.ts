@@ -3,7 +3,7 @@ import { getIntervalMonthlyFactor } from '@/constants/interval';
 import { getSubscriptions, SubscriptionSQLData } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { SubscriptionData } from '../subscriptions';
+import { SubscriptionData } from '../../subscriptions';
 const fs = require('fs').promises;
 
 
