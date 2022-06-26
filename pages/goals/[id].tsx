@@ -121,11 +121,11 @@ const GoalPastSavingsItemLeft = styled.div(
 )
 const GoalPastSavingsItemRight = styled.div(    
     css({
-    float: 'Right',
-    fontSize: 4,
-    fontWeight: 'semiBold',
-    lineHeight: 'body',
-    marginRight: 5
+        float: 'right',
+        fontSize: 4,
+        fontWeight: 'semiBold',
+        lineHeight: 'body',
+        marginRight: 5
     })
 )
 
