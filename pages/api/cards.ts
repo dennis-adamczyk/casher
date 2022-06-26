@@ -1,5 +1,5 @@
 import { BankCardData } from '@/components/common/BankCard';
-import { getAccounts } from '@/data/database';
+import { getAccounts, getSubscriptionsForBankAccount } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const fs = require('fs').promises;
@@ -7,8 +7,8 @@ const fs = require('fs').promises;
 export default async function handler(req: NextApiRequest, res: NextApiResponse<BankCardData[]>) {
   if (process.env.USE_SQL === 'true') {
     try {
-      let rows = await getAccounts ()
-      const Accounts = rows.map((row) => {
+      let cardRows = await getAccounts()
+      const Accounts = cardRows.map((row) => {
         let account = {} as BankCardData;
         account.id = row.id;
         account.bank = row.bank;
@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         account.holder = row.holder;
         account.iban = row.iban;
         account.balance = row.balance;
-        account.effectiveBalance = row.effective_balance;
+        account.effectiveBalance = row.balance;
         return account;
       });
       res.status(200).json(Accounts);

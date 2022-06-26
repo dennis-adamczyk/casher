@@ -16,13 +16,22 @@ const AccountsTitle = styled.h2(
   }),
 );
 
-const Home: NextPage<{ cards: BankCardData[], monthlySavings: number, monthlySubscriptions: number }> = ({ cards, monthlySavings, monthlySubscriptions }) => {
-  const totalBalance = cards.reduce((total, current) => total + current.balance, 0);
-  const totalEffectiveBalance = cards.reduce((total, current) => total + current.effectiveBalance, 0);
+const Home: NextPage<{ cards: BankCardData[], monthlySavings: {bankAccountId: number, totalMonthlySavings: number}[], 
+                      monthlySubscriptions: {bankAccountId: number, totalMonthlySubscriptions: number}[] }> = ({ cards, monthlySavings, monthlySubscriptions }) => {
+  const totalBalance = cards.reduce((total, current) => total + current.balance, 0)
+  const totalSavings = monthlySavings.reduce((total, current) => total + current.totalMonthlySavings, 0)
+  const totalSubscriptions = monthlySubscriptions.reduce((total, current) => total + current.totalMonthlySubscriptions, 0)
+  const totalEffectiveBalance = cards.reduce((total, current) => total + current.effectiveBalance, 0)
+
+  function calculateEffectiveBalance(pCard: BankCardData): number{
+    const savings = monthlySavings.find((val)=> val.bankAccountId === pCard.id)?.totalMonthlySavings || 0
+    const subscriptions = monthlySubscriptions.find((val)=> val.bankAccountId === pCard.id)?.totalMonthlySubscriptions || 0
+    return pCard.balance - (savings + subscriptions)
+  }
 
   return (
     <Content>
-      <MoneyOverview marginBottom={10} balance={totalBalance} effectiveBalance={totalEffectiveBalance} savingAmount={monthlySavings} subscriptionAmount={monthlySubscriptions}/>
+      <MoneyOverview marginBottom={10} balance={totalBalance} effectiveBalance={totalEffectiveBalance} savingAmount={totalSavings} subscriptionAmount={totalSubscriptions}/>
       <AccountsSection>
         <AccountsTitle>Deine Konten</AccountsTitle>
         {cards.map((card) => (
@@ -33,7 +42,7 @@ const Home: NextPage<{ cards: BankCardData[], monthlySavings: number, monthlySub
             holder={card.holder}
             iban={card.iban}
             balance={card.balance}
-            effectiveBalance={card.effectiveBalance}
+            effectiveBalance={calculateEffectiveBalance(card)}
           />
         ))}
 
@@ -44,17 +53,22 @@ const Home: NextPage<{ cards: BankCardData[], monthlySavings: number, monthlySub
 };
 
 export async function getServerSideProps(context: any) {
-  const [fetch1, fetch2, fetch3] = await Promise.all([
-    fetch(`http://localhost:3000/api/cards`), 
-    fetch(`http://localhost:3000/api/monthlySavings`),
-    fetch(`http://localhost:3000/api/totalSubscriptions`)
-  ])
-  const data0: BankCardData[] = await fetch1.json();
-  const data1: number = await fetch2.json();
-  const data2: number = await fetch3.json();
+  const cards: BankCardData[] = await (await fetch(`http://localhost:3000/api/cards`)).json()
+  const monthlySavingsByCardResponses = await Promise.all(cards.map((card:BankCardData)=>{
+    return fetch(`http://localhost:3000/api/monthlySavings/${card.id}`)
+  }))
+  const monthlySubscriptionsByCardResponses = await Promise.all(cards.map((card:BankCardData)=>{
+    return fetch(`http://localhost:3000/api/totalSubscriptions/${card.id}`)
+  }))
+
+  console.log(monthlySubscriptionsByCardResponses.length);
+  
+
+  const SubscriptionResults: {bankAccountId: number, totalMonthlySubscriptions: number}[] = await Promise.all(monthlySubscriptionsByCardResponses.map((res)=>res.json()))
+  const SavingResults: {bankAccountId: number, totalMonthlySavings: number}[] = await Promise.all(monthlySavingsByCardResponses.map((res)=>res.json()))
   
   return {
-    props: { cards: data0, monthlySavings: data1, monthlySubscriptions: data2},
+    props: { cards: cards, monthlySavings: SavingResults, monthlySubscriptions: SubscriptionResults},
   };
 }
 
