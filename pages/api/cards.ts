@@ -4,7 +4,7 @@ import { BankCardSQLData, getAccounts } from '@/data/database';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const fs = require('fs').promises;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<BankCardData[]>) {
   if(process.env.USE_SQL==='true'){
     getAccounts().then((rows: BankCardSQLData[])=>{
       const Accounts = rows.map((row) =>{
@@ -26,8 +26,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   }else{
     const file = await fs.readFile('./data/cards.json');
-    console.log('aaaaa');
-    
     res.status(200).json(JSON.parse(file));
   }
 }

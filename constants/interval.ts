@@ -1,4 +1,5 @@
 export enum interval {
+    undefined = -1,
     daily = 0,
     weekly = 1,
     biweekly = 2,
@@ -10,6 +11,8 @@ export enum interval {
 
 export function getIntervalCaption(pInterval: interval): string {
     switch(pInterval){
+        case interval.undefined:
+            return 'fehler'
         case interval.daily:
             return 'täglich'
         case interval.weekly:
@@ -26,3 +29,10 @@ export function getIntervalCaption(pInterval: interval): string {
             return 'jährlich'
     }
 }
+
+// export function getInvervalFromNumber(pNumber: number): interval {
+//     switch(pNumber){
+//         case -1:
+//             return interval.und
+//     }
+// }

@@ -2,6 +2,7 @@ import AddSubscriptionButton from '@/components/common/AddButton';
 import Collapse from '@/components/common/Collapse';
 import SubscriptionCard from '@/components/common/SubscriptionCard';
 import Content from '@/components/layout/Content';
+import { interval } from '@/constants/interval';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
 import styled from 'styled-components';
@@ -76,10 +77,15 @@ export interface SubscriptionData {
   amount: number;
   bankAccountId: number;
   categoryId: number;
-  interval: string;
+  interval: interval;
 }
 
-const Subscriptions: NextPage = () => {
+export interface CategoryData {
+  id: number;
+  name: string;
+}
+
+const Subscriptions: NextPage<[SubscriptionData, CategoryData][]> = (props) => {
   return (
     <Content>
       <SubscriptionsHeader>
@@ -90,40 +96,49 @@ const Subscriptions: NextPage = () => {
         </SubscriptionsTotalWrapper>
       </SubscriptionsHeader>
 
-      <SubscriptionCollapse title="Streaming" defaultOpen>
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
+      {/* <SubscriptionCollapse title="Streaming" defaultOpen>
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
       </SubscriptionCollapse>
 
       <SubscriptionCollapse title="Fitness">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
       </SubscriptionCollapse>
 
       <SubscriptionCollapse title="Versicherungen">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
       </SubscriptionCollapse>
 
       <SubscriptionCollapse title="Sparen">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
       </SubscriptionCollapse>
 
       <SubscriptionCollapse title="Freizeit">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
       </SubscriptionCollapse>
 
       <SubscriptionCollapse title="Wohnen">
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
-        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval="montalich" />
-      </SubscriptionCollapse>
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
+        <SubscriptionCollapseCard name="Spotify" amount={7.99} interval={interval.monthly} />
+      </SubscriptionCollapse> */}
 
       <AddSubscriptionButton>Neues Abo</AddSubscriptionButton>
     </Content>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  const res = await fetch(`http://localhost:3000/api/subscriptionWithCategory`);
+  const data: [SubscriptionData, CategoryData][] = await res.json();
+  
+  return {
+    props: { data },
+  };
+}
 
 export default Subscriptions;

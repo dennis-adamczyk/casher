@@ -1,4 +1,5 @@
 import { BankName } from "@/components/common/BankCard";
+import { interval } from "@/constants/interval";
 import { Database } from "sqlite3";
 
 const sqlite3 = require('sqlite3').verbose();
@@ -25,6 +26,69 @@ export function getAccounts(): Promise<BankCardSQLData[]>{
             }
         })) 
     })
-    
-    
 }
+
+export interface CategorySQLData {
+    id: number;
+    name: string;
+}
+
+export function getCategories(): Promise<CategorySQLData[]>{
+    return new Promise((resolve, reject)=>{
+        db.all("SELECT * FROM CATEGORIES;", ((err, rows)=>{
+            if(err){
+                reject(err)
+            }else{
+                resolve(rows)
+            }
+        })) 
+    })
+}
+
+export interface SubscriptionSQLData {
+    id: number;
+    name: string;
+    amount: number;
+    category_id: number;
+    bank_account_id: number;
+    interval: interval;
+}
+
+export function getSubscriptions(): Promise<SubscriptionSQLData[]>{
+    return new Promise((resolve, reject)=>{
+        db.all("SELECT * FROM SUBSCRIPTIONS;", ((err, rows)=>{
+            if(err){
+                reject(err)
+            }else{
+                resolve(rows)
+            }
+        })) 
+    })
+}
+
+
+
+export interface SubscriptionWithCategorySQLData{
+    id: number;
+    name: string;
+    amount: number;
+    category_id: number;
+    bank_account_id: number;
+    interval: interval;
+    cat_id: number;
+    cat_name: string;
+}
+
+export function GetSubscriptionsWithCategory(): Promise<SubscriptionWithCategorySQLData[]> {
+    return new Promise((resolve, reject)=>{
+        db.all(`SELECT s.id, s.name, s.amount, s.category_id, s.bank_account_id, s."interval", c.id as cat_id, c.name as cat_name 
+                FROM Subscriptions s 
+                JOIN Categories c ON s.category_id =c.id;`, ((err, rows)=>{
+            if(err){
+                reject(err)
+            }else{
+                resolve(rows)
+            }
+        })) 
+    })
+} 

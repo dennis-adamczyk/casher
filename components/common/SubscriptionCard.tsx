@@ -1,3 +1,4 @@
+import { getIntervalCaption } from '@/constants/interval';
 import { formatCurrency } from '@/helpers/formatter';
 import { SubscriptionData } from '@/pages/subscriptions';
 import css from '@styled-system/css';
@@ -63,7 +64,7 @@ const SubscriptionCard: FC<SubscriptionCardProps> = ({ name, amount, interval, .
       <SubscriptionCardName>{name}</SubscriptionCardName>
       <SubscriptionCardAmountWrapper>
         <SubscriptionCardAmount>{formatCurrency(amount)}</SubscriptionCardAmount>
-        <SubscriptionCardAmountInterval>{interval}</SubscriptionCardAmountInterval>
+        <SubscriptionCardAmountInterval>{getIntervalCaption(interval)}</SubscriptionCardAmountInterval>
       </SubscriptionCardAmountWrapper>
     </SubscriptionCardWrapper>
   );
