@@ -9,6 +9,8 @@ import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis
 import { formatCurrency } from '@/helpers/formatter';
 import { AnalysisDataLine } from '../analysis';
 import { ChartData } from 'chart.js';
+import Select from '@/components/ui/Select';
+import { getIntervalCaption, getSelectOptionFromInterval, interval } from '@/constants/interval';
 
 
 const GoalTitle = styled.h2(
@@ -139,6 +141,12 @@ export interface GoalHistoryEntry {
 }
 
 const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) => {
+  let options = []
+  for(let val in interval){
+    let intId = parseInt(val, 10)
+    if(intId < 0 || isNaN(intId)) continue
+    options.push(getSelectOptionFromInterval(intId as interval))
+  }
   return (
     <Content>
       <GoalTitle>      
@@ -155,12 +163,7 @@ const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) 
       <AnalysisLineChart data={goal.data as {} as AnalysisLineChartProps["data"]}></AnalysisLineChart>
       <GoalRegularSpending>
         <GoalRegularSpendingText>{formatCurrency(goal.savingAmount)}</GoalRegularSpendingText>
-        <select defaultValue={"monthly"}>
-            <option value="daily">Täglich</option>
-            <option value="weekly">Wöchtenlich</option>
-            <option value="monthly">Monatlich</option>
-            <option value="yearly">Jährlich</option>
-        </select>
+        <Select marginLeft={500} options={options} defaultValue={getSelectOptionFromInterval(goal.savingIntervall)}></Select>
       </GoalRegularSpending>
       <GoalExpectedFinishHeader>Vorraussichtlich wirst du dein Ziel erreichen in</GoalExpectedFinishHeader>
       <GoalExpectedFinisherTimerWrapper>

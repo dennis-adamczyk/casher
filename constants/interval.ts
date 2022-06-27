@@ -50,3 +50,7 @@ export function getIntervalMonthlyFactor(pInterval: interval): number{
             return 1/12
     }
 }
+
+export function getSelectOptionFromInterval(pInterval: interval): {value: number, label: string} {
+    return {value: pInterval, label: getIntervalCaption(pInterval)}
+}
