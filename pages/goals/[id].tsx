@@ -1,5 +1,5 @@
 import Content from '@/components/layout/Content';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
@@ -7,11 +7,8 @@ import { GetServerSideProps } from 'next/types';
 import { GoalData } from '.';
 import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
 import { formatCurrency } from '@/helpers/formatter';
-import { AnalysisDataLine } from '../analysis';
-import { ChartData } from 'chart.js';
 import Select from '@/components/ui/Select';
-import { getIntervalCaption, getIntervalMonthlyFactor, getSelectOptionFromInterval, interval } from '@/constants/interval';
-
+import {  getIntervalMonthlyFactor, getSelectOptionFromInterval, interval } from '@/constants/interval';
 
 const GoalTitle = styled.h2(
   css({
@@ -147,6 +144,11 @@ const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) 
     if(intId < 0 || isNaN(intId)) continue
     options.push(getSelectOptionFromInterval(intId as interval))
   }
+
+  const [RemainingDays, setRemainingDays] = useState(calculateRemainingDays(goal, goal.savingIntervall))
+  const [RemainingMonths, setRemainingMonths] = useState(calculateRemainingMonths(goal, goal.savingIntervall))
+  
+
   return (
     <Content>
       <GoalTitle>      
@@ -163,16 +165,21 @@ const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) 
       <AnalysisLineChart data={goal.data as {} as AnalysisLineChartProps["data"]}></AnalysisLineChart>
       <GoalRegularSpending>
         <GoalRegularSpendingText>{formatCurrency(goal.savingAmount)}</GoalRegularSpendingText>
-        <Select marginLeft={500} options={options} defaultValue={getSelectOptionFromInterval(goal.savingIntervall)}></Select>
+        <Select marginLeft={500} options={options} defaultValue={getSelectOptionFromInterval(goal.savingIntervall)} onChange={(value)=>{
+            let newSelect = value as {value: number, label: string}
+            
+            setRemainingMonths(calculateRemainingMonths(goal, newSelect.value as interval))
+            setRemainingDays(calculateRemainingDays(goal, newSelect.value as interval))
+        }}></Select>
       </GoalRegularSpending>
       <GoalExpectedFinishHeader>Vorraussichtlich wirst du dein Ziel erreichen in</GoalExpectedFinishHeader>
       <GoalExpectedFinisherTimerWrapper>
         <GoalExpectedFinisherTimerItem>
-            <GoalExpectedFinisherTimerItemTime>{calculateRemainingMonths(goal)}</GoalExpectedFinisherTimerItemTime>
+            <GoalExpectedFinisherTimerItemTime>{RemainingMonths}</GoalExpectedFinisherTimerItemTime>
             <GoalExpectedFinisherTimerItemLabel>Monate</GoalExpectedFinisherTimerItemLabel>
         </GoalExpectedFinisherTimerItem>
         <GoalExpectedFinisherTimerItem>
-            <GoalExpectedFinisherTimerItemTime>{calculateRemainingDays(goal)}</GoalExpectedFinisherTimerItemTime>
+            <GoalExpectedFinisherTimerItemTime>{RemainingDays}</GoalExpectedFinisherTimerItemTime>
             <GoalExpectedFinisherTimerItemLabel>Tage</GoalExpectedFinisherTimerItemLabel>
         </GoalExpectedFinisherTimerItem>
       </GoalExpectedFinisherTimerWrapper>
@@ -191,13 +198,13 @@ const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) 
   );
 };
 
-function calculateRemainingMonths(pGoal: GoalData): number {
-    return Math.floor((pGoal.targetAmount - pGoal.amount) / (pGoal.savingAmount * getIntervalMonthlyFactor(pGoal.savingIntervall)) )
+function calculateRemainingMonths(pGoal: GoalData, pInterval: interval): number {
+    return Math.floor((pGoal.targetAmount - pGoal.amount) / (pGoal.savingAmount * getIntervalMonthlyFactor(pInterval)) )
 }
 
-function calculateRemainingDays(pGoal: GoalData): number {
-    let paidPerMonth: number = (pGoal.savingAmount * getIntervalMonthlyFactor(pGoal.savingIntervall))
-    let remMonthsTotal: number = calculateRemainingMonths(pGoal) * paidPerMonth
+function calculateRemainingDays(pGoal: GoalData, pInterval: interval): number {
+    let paidPerMonth: number = (pGoal.savingAmount * getIntervalMonthlyFactor(pInterval))
+    let remMonthsTotal: number = calculateRemainingMonths(pGoal, pInterval) * paidPerMonth
     let remPayedInDay: number = ((pGoal.targetAmount - pGoal.amount) - remMonthsTotal)
     return Math.floor( remPayedInDay/ (paidPerMonth / 31))
 }
