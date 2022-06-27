@@ -8,7 +8,7 @@ import { GoalData } from '.';
 import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
 import { formatCurrency } from '@/helpers/formatter';
 import Select from '@/components/ui/Select';
-import {  getIntervalMonthlyFactor, getSelectOptionFromInterval, interval } from '@/constants/interval';
+import {  getIntervalMonthlyFactor, getSelectOptionFromInterval, interval, getAllSelectOptions } from '@/constants/interval';
 
 const GoalTitle = styled.h2(
   css({
@@ -138,16 +138,8 @@ export interface GoalHistoryEntry {
 }
 
 const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) => {
-  let options = []
-  for(let val in interval){
-    let intId = parseInt(val, 10)
-    if(intId < 0 || isNaN(intId)) continue
-    options.push(getSelectOptionFromInterval(intId as interval))
-  }
-
   const [RemainingDays, setRemainingDays] = useState(calculateRemainingDays(goal, goal.savingIntervall))
   const [RemainingMonths, setRemainingMonths] = useState(calculateRemainingMonths(goal, goal.savingIntervall))
-  
 
   return (
     <Content>
@@ -165,7 +157,7 @@ const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) 
       <AnalysisLineChart data={goal.data as {} as AnalysisLineChartProps["data"]}></AnalysisLineChart>
       <GoalRegularSpending>
         <GoalRegularSpendingText>{formatCurrency(goal.savingAmount)}</GoalRegularSpendingText>
-        <Select marginLeft={500} options={options} defaultValue={getSelectOptionFromInterval(goal.savingIntervall)} onChange={(value)=>{
+        <Select marginLeft={500} options={getAllSelectOptions()} defaultValue={getSelectOptionFromInterval(goal.savingIntervall)} onChange={(value)=>{
             let newSelect = value as {value: number, label: string}
             
             setRemainingMonths(calculateRemainingMonths(goal, newSelect.value as interval))
@@ -211,6 +203,7 @@ function calculateRemainingDays(pGoal: GoalData, pInterval: interval): number {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if(context.params){
+    // TODO TW convert to Pormise.all
     const goalRes = await fetch(`http://localhost:3000/api/goals/${context.params["id"]}`);
     const goalData: GoalData = await goalRes.json();
     

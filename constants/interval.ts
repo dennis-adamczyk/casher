@@ -1,3 +1,5 @@
+import { selectOption } from "./selectOptions"
+
 export enum interval {
     undefined = -1,
     daily = 0,
@@ -51,6 +53,16 @@ export function getIntervalMonthlyFactor(pInterval: interval): number{
     }
 }
 
-export function getSelectOptionFromInterval(pInterval: interval): {value: number, label: string} {
+export function getSelectOptionFromInterval(pInterval: interval): selectOption {
     return {value: pInterval, label: getIntervalCaption(pInterval)}
+}
+
+export function getAllSelectOptions(): selectOption[] {
+    let options = []
+    for(let val in interval){
+        let intId = parseInt(val, 10)
+        if(intId < 0 || isNaN(intId)) continue
+        options.push(getSelectOptionFromInterval(intId as interval))
+    }
+    return options
 }

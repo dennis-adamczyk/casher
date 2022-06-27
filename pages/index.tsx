@@ -61,9 +61,6 @@ export async function getServerSideProps(context: any) {
     return fetch(`http://localhost:3000/api/totalSubscriptions/${card.id}`)
   }))
 
-  console.log(monthlySubscriptionsByCardResponses.length);
-  
-
   const SubscriptionResults: {bankAccountId: number, totalMonthlySubscriptions: number}[] = await Promise.all(monthlySubscriptionsByCardResponses.map((res)=>res.json()))
   const SavingResults: {bankAccountId: number, totalMonthlySavings: number}[] = await Promise.all(monthlySavingsByCardResponses.map((res)=>res.json()))
   
