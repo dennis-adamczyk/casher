@@ -21,7 +21,7 @@ const Home: NextPage<{ cards: BankCardData[], monthlySavings: {bankAccountId: nu
   const totalBalance = cards.reduce((total, current) => total + current.balance, 0)
   const totalSavings = monthlySavings.reduce((total, current) => total + current.totalMonthlySavings, 0)
   const totalSubscriptions = monthlySubscriptions.reduce((total, current) => total + current.totalMonthlySubscriptions, 0)
-  const totalEffectiveBalance = cards.reduce((total, current) => total + current.effectiveBalance, 0)
+  const totalEffectiveBalance = totalBalance - (totalSavings + totalSubscriptions)
 
   function calculateEffectiveBalance(pCard: BankCardData): number{
     const savings = monthlySavings.find((val)=> val.bankAccountId === pCard.id)?.totalMonthlySavings || 0
