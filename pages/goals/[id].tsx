@@ -206,7 +206,7 @@ function calculateRemainingDays(pGoal: GoalData, pInterval: interval): number {
     let paidPerMonth: number = (pGoal.savingAmount * getIntervalMonthlyFactor(pInterval))
     let remMonthsTotal: number = calculateRemainingMonths(pGoal, pInterval) * paidPerMonth
     let remPayedInDay: number = ((pGoal.targetAmount - pGoal.amount) - remMonthsTotal)
-    return Math.floor( remPayedInDay/ (paidPerMonth / 31))
+    return Math.ceil( remPayedInDay/ (paidPerMonth / 31))
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
