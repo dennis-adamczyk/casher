@@ -61,7 +61,7 @@ const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {
           id={goal.id}
         />
       ))}
-      <AddGoalButton>Neues Sparziel</AddGoalButton>
+      <AddGoalButton href="/goals/new">Neues Sparziel</AddGoalButton>
     </Content>
   );
 };
