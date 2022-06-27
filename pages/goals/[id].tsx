@@ -10,7 +10,7 @@ import { formatCurrency } from '@/helpers/formatter';
 import { AnalysisDataLine } from '../analysis';
 import { ChartData } from 'chart.js';
 import Select from '@/components/ui/Select';
-import { getIntervalCaption, getSelectOptionFromInterval, interval } from '@/constants/interval';
+import { getIntervalCaption, getIntervalMonthlyFactor, getSelectOptionFromInterval, interval } from '@/constants/interval';
 
 
 const GoalTitle = styled.h2(
@@ -168,30 +168,39 @@ const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) 
       <GoalExpectedFinishHeader>Vorraussichtlich wirst du dein Ziel erreichen in</GoalExpectedFinishHeader>
       <GoalExpectedFinisherTimerWrapper>
         <GoalExpectedFinisherTimerItem>
-            <GoalExpectedFinisherTimerItemTime>{goal.remainingMonths}</GoalExpectedFinisherTimerItemTime>
+            <GoalExpectedFinisherTimerItemTime>{calculateRemainingMonths(goal)}</GoalExpectedFinisherTimerItemTime>
             <GoalExpectedFinisherTimerItemLabel>Monate</GoalExpectedFinisherTimerItemLabel>
         </GoalExpectedFinisherTimerItem>
         <GoalExpectedFinisherTimerItem>
-            <GoalExpectedFinisherTimerItemTime>{goal.remainingDays}</GoalExpectedFinisherTimerItemTime>
+            <GoalExpectedFinisherTimerItemTime>{calculateRemainingDays(goal)}</GoalExpectedFinisherTimerItemTime>
             <GoalExpectedFinisherTimerItemLabel>Tage</GoalExpectedFinisherTimerItemLabel>
         </GoalExpectedFinisherTimerItem>
       </GoalExpectedFinisherTimerWrapper>
       <br></br>
         <GoalPastSavingsHeader>Einzahlungen</GoalPastSavingsHeader>
         {history.reverse().map((value, index)=>(
-        <>{console.log(index)}
-        
-            <GoalPastSavingsItem key={index}>
-                    <GoalPastSavingsItemLeft>{formatCurrency(value.value)}</GoalPastSavingsItemLeft>
-                    <GoalPastSavingsItemRight>{value.date}</GoalPastSavingsItemRight>
-            </GoalPastSavingsItem>
-            <br></br>
+        <>
+          <GoalPastSavingsItem key={index}>
+            <GoalPastSavingsItemLeft>{formatCurrency(value.value)}</GoalPastSavingsItemLeft>
+            <GoalPastSavingsItemRight>{value.date}</GoalPastSavingsItemRight>
+          </GoalPastSavingsItem>
+          <br></br>
         </>
         ))}
     </Content>
   );
 };
 
+function calculateRemainingMonths(pGoal: GoalData): number {
+    return Math.floor((pGoal.targetAmount - pGoal.amount) / (pGoal.savingAmount * getIntervalMonthlyFactor(pGoal.savingIntervall)) )
+}
+
+function calculateRemainingDays(pGoal: GoalData): number {
+    let paidPerMonth: number = (pGoal.savingAmount * getIntervalMonthlyFactor(pGoal.savingIntervall))
+    let remMonthsTotal: number = calculateRemainingMonths(pGoal) * paidPerMonth
+    let remPayedInDay: number = ((pGoal.targetAmount - pGoal.amount) - remMonthsTotal)
+    return Math.floor( remPayedInDay/ (paidPerMonth / 31))
+}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if(context.params){
