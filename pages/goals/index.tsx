@@ -42,8 +42,6 @@ export interface GoalData {
   savingAmount: number;
   data: AnalysisDataLine;
   historyId: number;
-  remainingDays?: number;
-  remainingMonths?: number;
 }
 
 const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {

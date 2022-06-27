@@ -19,8 +19,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       result.savingIntervall = row.savings_interval
       result.targetAmount = row.target_amount
       result.historyId = row.history_id
-      result.remainingDays = row.remaining_days
-      result.remainingMonths = row.remaining_months
   
       result.data = JSON.parse(row.data)
       res.status(200).json(result);

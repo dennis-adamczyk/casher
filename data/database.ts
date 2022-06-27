@@ -116,13 +116,11 @@ export interface GoalSQLData {
     savings_interval: number;
     data: string;
     history_id: number
-    remaining_days?: number;
-    remaining_months?: number;
 }
 
 export function getGoals(): Promise<GoalSQLData[]>{
     return promisifySQL(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
-                         g.amount, g.savings_amount, g.savings_interval, g.history_id, g.remaining_months, g.remaining_days, ad."data" 
+                         g.amount, g.savings_amount, g.savings_interval, g.history_id, ad."data" 
                             FROM Goals g 
                             JOIN Analyses_Data ad 
                             ON g.analysis_data_id = ad.id;`)
@@ -130,7 +128,7 @@ export function getGoals(): Promise<GoalSQLData[]>{
 
 export function getGoal(pId: number): Promise<GoalSQLData>{
     return promisifySQLSingleRow(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
-                                 g.amount, g.savings_amount, g.savings_interval, g.history_id, g.remaining_months, g.remaining_days, ad."data" 
+                                 g.amount, g.savings_amount, g.savings_interval, g.history_id, ad."data" 
                                     FROM Goals g 
                                     JOIN Analyses_Data ad 
                                     ON g.analysis_data_id = ad.id WHERE g.id = ${pId};`);
@@ -138,7 +136,7 @@ export function getGoal(pId: number): Promise<GoalSQLData>{
 
 export function getGoalsForBankAccount(pBankAccountId: number): Promise<GoalSQLData[]>{
     return promisifySQL(`SELECT g.id, g.bank_account_id, g.name, g.emojiIcon, g.target_amount, 
-                        g.amount, g.savings_amount, g.savings_interval, g.history_id, g.remaining_months, g.remaining_days, ad."data" 
+                        g.amount, g.savings_amount, g.savings_interval, g.history_id, ad."data" 
                             FROM Goals g 
                             JOIN Analyses_Data ad 
                             ON g.analysis_data_id = ad.id 
