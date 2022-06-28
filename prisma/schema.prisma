@@ -9,7 +9,7 @@ datasource db {
 
 model Bank_Account {
   id                String    @id @default(cuid())
-  user_id           String    @unique
+  user_id           String
   bank              String
   bank_name         String
   holder            String
@@ -33,8 +33,8 @@ model Analysis {
 model Analysis_Data {
   id   String     @id @default(cuid())
   data String? 
-  analysis Analysis?
-  goal Goal?
+  analysis Analysis[]
+  goal Goal[]
 }
 
 model Category {
@@ -46,7 +46,7 @@ model Category {
 model Goal_History {
   id     String    @id @default(cuid())
   values String @default("[]")
-  goal   Goal?
+  goal   Goal[]
 }
 
 model Goal {

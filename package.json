@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.1",
+    "@prisma/client": "^4.0.0",
     "@styled-system/css": "^5.1.5",
     "@types/sqlite3": "^3.1.8",
     "chart.js": "^3.8.0",
