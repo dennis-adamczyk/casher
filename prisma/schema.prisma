@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./casher.db"
+}
+
+model Bank_Account {
+  id                String    @id @default(cuid())
+  user_id           String    @unique
+  bank              String
+  bank_name         String
+  holder            String
+  iban              String    @unique
+  balance           Float
+  Analyses          Analysis[]
+  Subscriptions     Subscription[]
+  Goals             Goal[]
+}
+
+model Analysis {
+  id               String    @id @default(cuid())
+  type             String
+  name             String
+  bank_account_id  String    @unique
+  bank_account     Bank_Account @relation(fields: [bank_account_id], references: [id])
+  data_id          String
+  data             Analysis_Data @relation(fields: [data_id], references: [id])
+}
+
+model Analysis_Data {
+  id   String     @id @default(cuid())
+  data String? 
+  analysis Analysis?
+  goal Goal?
+}
+
+model Category {
+  id   String    @id @default(cuid())
+  name String
+  subscriptions Subscription[]
+}
+
+model Goal_History {
+  id     String    @id @default(cuid())
+  values String @default("[]")
+  goal   Goal?
+}
+
+model Goal {
+  id               String     @id @default(cuid())
+  name             String
+  emojiIcon        String?
+  target_amount    Int
+  amount           Int
+  savings_amount   Int
+  savings_interval Int
+  analysis_data_id String
+  analysis_data    Analysis_Data @relation(fields: [analysis_data_id], references: [id])
+  bank_account_id  String 
+  bank_account     Bank_Account @relation(fields: [bank_account_id], references: [id])
+  history_id       String     @default("-1")
+  history          Goal_History @relation(fields: [history_id], references: [id])
+}
+
+model Subscription {
+  id              String    @id @default(cuid())
+  name            String
+  amount          Float
+  interval        Int
+  category_id     String
+  category        Category @relation(fields: [category_id], references: [id])
+  bank_account_id String
+  bank_account    Bank_Account @relation(fields: [bank_account_id], references: [id])
+}
