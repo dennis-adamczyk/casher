@@ -8,6 +8,8 @@ import AddButton from '@/components/common/AddButton';
 import AnalysisCard from '@/components/analysis/Card';
 import AnalysisPieChart, { AnalysisPieChartProps } from '@/components/analysis/Pie';
 import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
+import { DBClient } from '@/data/database';
+import { Analysis, Analysis_Data } from '@prisma/client';
 
 const EmptyWrapper = styled.div(
   css({
@@ -49,28 +51,8 @@ const EmptyDescription = styled.p(
   }),
 );
 
-export interface AnalysisDataPie {
-  id: number,
-  bankAccountId: number,
-  type: "pie",
-  name: string,
-  data: AnalysisPieChartProps["data"]
-}
-
-export interface AnalysisDataLine {
-  id: number,
-  bankAccountId: number,
-  type: "line",
-  name: string,
-  data: AnalysisLineChartProps["data"]
-}
-
-export type AnalysisData = AnalysisDataLine | AnalysisDataPie
-
-const Analysis: FC<{ analyses: AnalysisData[] }> = ({analyses}) => {
-  console.log(analyses);
-  
-  const [analysisModules, setAnalysisModules] = useState(analyses);
+const AnalysisPage: FC<{ analyses: (Analysis & {data: Analysis_Data})[] }> = (props) => {
+  const [analysisModules, setAnalysisModules] = useState(props.analyses);
 
   return (
     <Content>
@@ -91,7 +73,10 @@ const Analysis: FC<{ analyses: AnalysisData[] }> = ({analyses}) => {
         key={analysis.id} 
         name={analysis.name}  
         >
-        { analysis.type === "pie" ? <AnalysisPieChart data={analysis.data} /> : <AnalysisLineChart data={analysis.data}></AnalysisLineChart>}
+        { 
+          analysis.type === "pie" ? <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps["data"]} /> : 
+                                    <AnalysisLineChart data={JSON.parse(analysis.data?.data || '') as AnalysisLineChartProps["data"]}/>
+        }
         
       </AnalysisCard>))}
     </Content>
@@ -99,12 +84,16 @@ const Analysis: FC<{ analyses: AnalysisData[] }> = ({analyses}) => {
 };
 
 export async function getServerSideProps(context: any) {
-  const res = await fetch(`http://localhost:3000/api/analysis`);
-  const data: AnalysisData[] = await res.json();
-  console.log(data);
+  const data: (Analysis & {data: Analysis_Data})[] = await DBClient.analysis
+  .findMany({
+    include:{
+      data: true
+    }
+  })
+
   return {
     props: { analyses: data },
   };
 }
 
-export default Analysis;
+export default AnalysisPage;

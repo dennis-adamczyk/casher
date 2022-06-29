@@ -1,19 +1,20 @@
-import { getGoalHistory } from '@/data/database';
+import { DBClient } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
-import { GoalHistory } from '@/pages/goals/[id]';
+import { Goal_History } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<GoalHistory>) {
-  const { id } = req.query;
-  if (process.env.USE_SQL === 'true') {
-    try {
-      let row = await getGoalHistory(parseInt(id as string, 10))
-      let history: GoalHistory = JSON.parse(row.values)
-      res.status(200).json(history);
-    } catch (error) {
-      apiError(error, res)
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Goal_History>) {
+  const { id } = req.query;  
+  const goal_history_id = id as string
+
+  try {
+    const goal_history = await DBClient.goal_History.findFirst({where:{id: goal_history_id}})
+    if(goal_history){
+      res.status(200).json(goal_history)
+    }else{
+      res.status(204).json({} as Goal_History)
     }
-  }else{
-      res.status(404);
+  } catch (error) {
+    apiError(error, res)
   }
 }

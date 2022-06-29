@@ -4,11 +4,12 @@ import styled from 'styled-components';
 import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
 import { GetServerSideProps } from 'next/types';
-import { GoalData } from '.';
 import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
 import { formatCurrency } from '@/helpers/formatter';
 import Select from '@/components/ui/Select';
 import {  getIntervalMonthlyFactor, getSelectOptionFromInterval, interval, getAllSelectOptions } from '@/constants/interval';
+import { DBClient } from '@/data/database';
+import { Goal, Goal_History, Analysis_Data } from '@prisma/client';
 
 const GoalTitle = styled.h2(
   css({
@@ -130,16 +131,22 @@ const GoalPastSavingsItemRight = styled.div(
     })
 )
 
-export type GoalHistory = GoalHistoryEntry[]
+type GoalHistory = GoalHistoryEntry[]
 
-export interface GoalHistoryEntry {
+interface GoalHistoryEntry {
     date: string;
     value: number;
 }
 
-const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) => {
-  const [RemainingDays, setRemainingDays] = useState(calculateRemainingDays(goal, goal.savingIntervall))
-  const [RemainingMonths, setRemainingMonths] = useState(calculateRemainingMonths(goal, goal.savingIntervall))
+type data = (Goal & {
+  history: Goal_History;
+  analysis_data: Analysis_Data;
+})
+
+const GoalPage: FC<{ goal: data }> = ({ goal }) => {
+  const [RemainingDays, setRemainingDays] = useState(calculateRemainingDays(goal, goal.savings_interval))
+  const [RemainingMonths, setRemainingMonths] = useState(calculateRemainingMonths(goal, goal.savings_interval))
+  const history: GoalHistory = JSON.parse(goal.history.values) as GoalHistory
 
   return (
     <Content>
@@ -148,16 +155,16 @@ const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) 
           key={goal.id}
           name={goal.name}
           amount={goal.amount}
-          targetAmount={goal.targetAmount}
+          targetAmount={goal.target_amount}
           emojiIcon={goal.emojiIcon}
           id={goal.id}
           backgroundColor={'transparent'}
         />
       </GoalTitle>
-      <AnalysisLineChart data={goal.data as {} as AnalysisLineChartProps["data"]}></AnalysisLineChart>
+      <AnalysisLineChart data={JSON.parse(goal.analysis_data.data || '') as AnalysisLineChartProps["data"]}></AnalysisLineChart>
       <GoalRegularSpending>
-        <GoalRegularSpendingText>{formatCurrency(goal.savingAmount)}</GoalRegularSpendingText>
-        <Select marginLeft={500} options={getAllSelectOptions()} defaultValue={getSelectOptionFromInterval(goal.savingIntervall)} onChange={(value)=>{
+        <GoalRegularSpendingText>{formatCurrency(goal.savings_amount)}</GoalRegularSpendingText>
+        <Select marginLeft={500} options={getAllSelectOptions()} defaultValue={getSelectOptionFromInterval(goal.savings_interval)} onChange={(value)=>{
             let newSelect = value as {value: number, label: string}
             
             setRemainingMonths(calculateRemainingMonths(goal, newSelect.value as interval))
@@ -190,27 +197,30 @@ const Goals: FC<{ goal: GoalData, history: GoalHistory }> = ({ goal, history }) 
   );
 };
 
-function calculateRemainingMonths(pGoal: GoalData, pInterval: interval): number {
-    return Math.floor((pGoal.targetAmount - pGoal.amount) / (pGoal.savingAmount * getIntervalMonthlyFactor(pInterval)) )
+function calculateRemainingMonths(pGoal: Goal, pInterval: interval): number {
+    return Math.floor((pGoal.target_amount - pGoal.amount) / (pGoal.savings_amount * getIntervalMonthlyFactor(pInterval)) )
 }
 
-function calculateRemainingDays(pGoal: GoalData, pInterval: interval): number {
-    let paidPerMonth: number = (pGoal.savingAmount * getIntervalMonthlyFactor(pInterval))
+function calculateRemainingDays(pGoal: Goal, pInterval: interval): number {
+    let paidPerMonth: number = (pGoal.savings_amount * getIntervalMonthlyFactor(pInterval))
     let remMonthsTotal: number = calculateRemainingMonths(pGoal, pInterval) * paidPerMonth
-    let remPayedInDay: number = ((pGoal.targetAmount - pGoal.amount) - remMonthsTotal)
+    let remPayedInDay: number = ((pGoal.target_amount - pGoal.amount) - remMonthsTotal)
     return Math.ceil( remPayedInDay/ (paidPerMonth / 31))
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if(context.params){
-    // TODO TW convert to Pormise.all
-    const goalRes = await fetch(`http://localhost:3000/api/goals/${context.params["id"]}`);
-    const goalData: GoalData = await goalRes.json();
-    
-    const historyRes = await fetch(`http://localhost:3000/api/goals/history/${goalData.historyId}`)
-    const historyData: GoalHistory = await historyRes.json()
+    const goal = await DBClient.goal.findFirst({
+      where:{
+        id: context.params["id"] as string
+      },
+      include:{
+        analysis_data: true,
+        history: true
+      }
+    })
     return {
-      props: { goal: goalData, history: historyData },
+      props: { goal: goal },
     };  
   }else{
     return {props: {goal: null}}
@@ -218,4 +228,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   
 }
 
-export default Goals;
+export default GoalPage;

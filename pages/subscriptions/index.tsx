@@ -2,8 +2,10 @@ import AddSubscriptionButton from '@/components/common/AddButton';
 import Collapse from '@/components/common/Collapse';
 import SubscriptionCard from '@/components/common/SubscriptionCard';
 import Content from '@/components/layout/Content';
-import { interval } from '@/constants/interval';
+import { getIntervalMonthlyFactor, interval } from '@/constants/interval';
+import { DBClient } from '@/data/database';
 import { formatCurrency } from '@/helpers/formatter';
+import { Category, Subscription } from '@prisma/client';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
 import styled from 'styled-components';
@@ -72,36 +74,12 @@ const SubscriptionCollapseCard = styled(SubscriptionCard)(
   }),
 );
 
-export interface SubscriptionData {
-  id: number;
-  name: string;
-  amount: number;
-  bankAccountId: number;
-  categoryId: number;
-  interval: interval;
-}
+type data = (Category & {
+  subscriptions: Subscription[];
+})[];
 
-export interface CategoryData {
-  id: number;
-  name: string;
-}
-
-const Subscriptions: NextPage<{ data: [SubscriptionData, CategoryData][], totalSubscriptionCost: number }> = ({ data, totalSubscriptionCost}) => {
-  const subscriptionCategories: (CategoryData & { subscriptions: SubscriptionData[] })[] = [];
-  for (const [subscription, category] of data) {
-    const subscriptionCategoryIndex = subscriptionCategories.findIndex(
-      (subscriptionCategory) => subscriptionCategory.id === category.id,
-    );
-    if (subscriptionCategoryIndex === -1) {
-      subscriptionCategories.push({
-        ...category,
-        subscriptions: [subscription],
-      });
-    } else {
-      subscriptionCategories[subscriptionCategoryIndex].subscriptions.push(subscription);
-    }
-  }
-
+const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number }> = ({ categories, totalSubscriptionCost }) => {
+  categories[0]
   return (
     <Content>
       <SubscriptionsHeader>
@@ -111,33 +89,42 @@ const Subscriptions: NextPage<{ data: [SubscriptionData, CategoryData][], totalS
           <SubscriptionsTotalInterval>monatlich</SubscriptionsTotalInterval>
         </SubscriptionsTotalWrapper>
       </SubscriptionsHeader>
-
-      {subscriptionCategories.map((category, index) => (
-        <SubscriptionCollapse title={category.name} defaultOpen={index === 0} key={category.id}>
-          {category.subscriptions.map((subscription) => (
-            <SubscriptionCollapseCard
-              name={subscription.name}
-              amount={subscription.amount}
-              interval={subscription.interval}
-              key={subscription.id}
-            />
-          ))}
-        </SubscriptionCollapse>
-      ))}
-
+    	{
+        categories.map((category, index) => (
+          <SubscriptionCollapse title={category.name} defaultOpen={index === 0} key={category.id}>
+            {
+              category.subscriptions.map((sub) => (
+                <SubscriptionCollapseCard
+                  name={sub.name}
+                  amount={sub.amount}
+                  interval={sub.interval}
+                  key={sub.id}
+                />
+              ))
+            }
+          </SubscriptionCollapse>
+        ))
+      }
       <AddSubscriptionButton href="/subscriptions/new">Neues Abo</AddSubscriptionButton>
     </Content>
   );
 };
 
 export async function getServerSideProps(context: any) {
-  const [fetch1, fetch2] = await Promise.all([fetch(`http://localhost:3000/api/subscriptionWithCategory`), 
-                                              fetch(`http://localhost:3000/api/totalSubscriptions`)]);
-  const data1: [SubscriptionData, CategoryData][] = await fetch1.json();
-  const data2 = await fetch2.json();
+  const data = await DBClient.category.findMany({
+    include: {
+      subscriptions: true,
+    },
+  });
+
+  const subs = await DBClient.subscription.findMany();
+  const cost = subs.reduce((prev, current) => {
+    const subCost = current.amount * getIntervalMonthlyFactor(current.interval);
+    return prev + subCost;
+  }, 0);
 
   return {
-    props: { data: data1, totalSubscriptionCost: data2 },
+    props: { categories: data, totalSubscriptionCost: cost },
   };
 }
 

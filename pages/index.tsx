@@ -1,7 +1,10 @@
 import AddAcountButton from '@/components/common/AddButton';
-import BankCard, { BankCardData, BankName } from '@/components/common/BankCard';
+import BankCard from '@/components/common/BankCard';
 import MoneyOverview from '@/components/common/MoneyOverview';
 import Content from '@/components/layout/Content';
+import { getIntervalMonthlyFactor } from '@/constants/interval';
+import { DBClient } from '@/data/database';
+import { Bank_Account } from '@prisma/client';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
 import styled from 'styled-components';
@@ -16,16 +19,25 @@ const AccountsTitle = styled.h2(
   }),
 );
 
-const Home: NextPage<{ cards: BankCardData[], monthlySavings: {bankAccountId: number, totalMonthlySavings: number}[], 
-                      monthlySubscriptions: {bankAccountId: number, totalMonthlySubscriptions: number}[] }> = ({ cards, monthlySavings, monthlySubscriptions }) => {
+type accountWithMonthlyGoalCost = {
+  bankAccountId: string, 
+  totalMonthlyGoalCost: number
+}
+
+type accountWithMonthlySubCost = {
+  bankAccountId: string, 
+  totalMonthlySubscriptionCost: number
+}
+
+const Home: NextPage<{ cards: Bank_Account[], monthlySavings: accountWithMonthlyGoalCost[], monthlySubscriptions: accountWithMonthlySubCost[] }> = ({ cards, monthlySavings, monthlySubscriptions }) => {
   const totalBalance = cards.reduce((total, current) => total + current.balance, 0)
-  const totalSavings = monthlySavings.reduce((total, current) => total + current.totalMonthlySavings, 0)
-  const totalSubscriptions = monthlySubscriptions.reduce((total, current) => total + current.totalMonthlySubscriptions, 0)
+  const totalSavings = monthlySavings.reduce((total, current) => total + current.totalMonthlyGoalCost, 0)
+  const totalSubscriptions = monthlySubscriptions.reduce((total, current) => total + current.totalMonthlySubscriptionCost, 0)
   const totalEffectiveBalance = totalBalance - (totalSavings + totalSubscriptions)
 
-  function calculateEffectiveBalance(pCard: BankCardData): number{
-    const savings = monthlySavings.find((val)=> val.bankAccountId === pCard.id)?.totalMonthlySavings || 0
-    const subscriptions = monthlySubscriptions.find((val)=> val.bankAccountId === pCard.id)?.totalMonthlySubscriptions || 0
+  function calculateEffectiveBalance(pCard: Bank_Account): number{
+    const savings = monthlySavings.find((val)=> val.bankAccountId === pCard.id)?.totalMonthlyGoalCost || 0
+    const subscriptions = monthlySubscriptions.find((val)=> val.bankAccountId === pCard.id)?.totalMonthlySubscriptionCost || 0
     return pCard.balance - (savings + subscriptions)
   }
 
@@ -37,8 +49,8 @@ const Home: NextPage<{ cards: BankCardData[], monthlySavings: {bankAccountId: nu
         {cards.map((card) => (
           <BankCard
             key={card.id}
-            bank={card.bank}
-            bankName={card.bankName}
+            bank={card.bank as ("placeholder" | "sparkasse" | "volksbank" | "commerzbank") }
+            bankName={card.bank_name}
             holder={card.holder}
             iban={card.iban}
             balance={card.balance}
@@ -53,22 +65,48 @@ const Home: NextPage<{ cards: BankCardData[], monthlySavings: {bankAccountId: nu
 };
 
 export async function getServerSideProps(context: any) {
-  const cards: BankCardData[] = await (await fetch(`http://localhost:3000/api/cards`)).json()
-  const monthlySavingsByCardResponses = await Promise.all(cards.map((card:BankCardData)=>{
-    return fetch(`http://localhost:3000/api/monthlySavings/${card.id}`)
-  }))
-  const monthlySubscriptionsByCardResponses = await Promise.all(cards.map((card:BankCardData)=>{
-    return fetch(`http://localhost:3000/api/totalSubscriptions/${card.id}`)
+  const accounts = await DBClient.bank_Account.findMany()
+
+  const monthlySavingCostByCard: accountWithMonthlyGoalCost[] = await Promise.all(accounts.map( async (acc)=>{
+    const goals = await DBClient.goal.findMany({ 
+      where: {
+        bank_account_id: {
+          equals: acc.id}
+        }
+      }
+    )
+
+    const monthlyGoalCost = goals.reduce( (prev, current) => {
+      return prev + (current.savings_amount * getIntervalMonthlyFactor(current.savings_interval))
+    }, 0)
+
+    return {
+      bankAccountId: acc.id, 
+      totalMonthlyGoalCost: monthlyGoalCost}
   }))
 
-  const SubscriptionResults: {bankAccountId: number, totalMonthlySubscriptions: number}[] = await Promise.all(monthlySubscriptionsByCardResponses.map((res)=>res.json()))
-  const SavingResults: {bankAccountId: number, totalMonthlySavings: number}[] = await Promise.all(monthlySavingsByCardResponses.map((res)=>res.json()))
-  
+  const monthlySubCostByCard: accountWithMonthlySubCost[] = await Promise.all(accounts.map( async (acc)=>{
+    const goals = await DBClient.subscription.findMany({
+      where:{
+        bank_account_id:{
+          equals: acc.id
+        }
+      }
+    })
+
+    const monthlySubCost = goals.reduce((prev, current) => { 
+      return prev + (current.amount * getIntervalMonthlyFactor(current.interval))
+    }, 0)
+
+    return {
+      bankAccountId: acc.id, 
+      totalMonthlySubscriptionCost: monthlySubCost
+    }
+  }))
+
   return {
-    props: { cards: cards, monthlySavings: SavingResults, monthlySubscriptions: SubscriptionResults},
+    props: { cards: accounts, monthlySavings: monthlySavingCostByCard, monthlySubscriptions: monthlySubCostByCard},
   };
 }
-
-
 
 export default Home;
