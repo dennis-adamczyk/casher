@@ -7,7 +7,7 @@ import { getAllSelectOptions } from '@/constants/interval';
 
 const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
   return (
-    <AddFormWrapper>
+    <AddFormWrapper onSubmit={test}>
       <AddFormTitle>{title}</AddFormTitle>
       <Input label="Name des Ziels" />
       <Input label="Emoji des Ziels" />
@@ -25,5 +25,15 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
     </AddFormWrapper>
   );
 };
+
+async function test(event: any) {
+  event.preventDefault()
+  const result = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/goals', 
+  {
+    method: 'POST'
+  })
+  const content = await result.json()
+  console.log(content)
+}
 
 export default AddSubscriptionForm;
