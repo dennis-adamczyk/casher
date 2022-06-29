@@ -123,7 +123,7 @@ const Select: FC<SelectProps> = ({ label, ...props }) => {
 
       {/* // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore */}
-      <ReactSelect {...rest} components={{ DropdownIndicator }} styles={customStyles} id={id} />
+      <ReactSelect {...rest} isSearchable={false} components={{ DropdownIndicator }} styles={customStyles} id={id} />
     </SelectSetWrapper>
   );
 };
