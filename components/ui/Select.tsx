@@ -27,27 +27,6 @@ const SelectLabel = styled.label(
   }),
 );
 
-const SelectWrapper = styled.div(({ theme }) =>
-  css({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderRadius: 'smaller',
-    borderWidth: 'normal',
-    borderColor: 'white.default',
-    borderStyle: 'normal',
-    backgroundColor: 'white.opacity.subtle8',
-    height: 8,
-    transitionDuration: theme.transitions.duration.short,
-    transitionProperty: 'border',
-    transitionTimingFunction: theme.transitions.timingFunction.normal,
-
-    '&:focus-within': {
-      borderColor: 'blue.200',
-    },
-  }),
-);
-
 const DropdownIndicator = (props: DropdownIndicatorProps) => {
   return (
     <components.DropdownIndicator {...props}>

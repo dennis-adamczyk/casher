@@ -1,11 +1,11 @@
 import AddGoalForm from '@/components/common/AddGoalForm';
 import Content from '@/components/layout/Content';
-import { selectOption } from '@/constants/selectOptions';
+import { SelectOption } from '@/helpers/selectOptions';
 import { DBClient } from '@/data/database';
 import type { GetServerSideProps, NextPage } from 'next';
 
 export interface AddGoalProps {
-  accounts: selectOption[];
+  accounts: SelectOption[];
 }
 
 const Goals: NextPage<AddGoalProps> = (props) => {
@@ -19,7 +19,7 @@ const Goals: NextPage<AddGoalProps> = (props) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const accounts = await DBClient.bank_Account.findMany();
 
-  const accOptions: selectOption[] = accounts.map((acc) => {
+  const accOptions: SelectOption[] = accounts.map((acc) => {
     return { value: acc.id, label: acc.bank_name || '' };
   });
   return {

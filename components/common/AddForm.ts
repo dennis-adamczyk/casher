@@ -1,4 +1,4 @@
-import { selectOption } from '@/constants/selectOptions';
+import { SelectOption } from '@/helpers/selectOptions';
 import css from '@styled-system/css';
 import styled from 'styled-components';
 
@@ -22,6 +22,6 @@ export const AddFormButtons = styled.div(
 
 export interface AddFormProps {
   title: string;
-  accounts: selectOption[];
-  categories?: selectOption[];
+  accounts: SelectOption[];
+  categories?: SelectOption[];
 }

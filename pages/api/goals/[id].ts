@@ -1,5 +1,5 @@
 import { DBClient } from '@/data/database';
-import { apiError } from '@/helpers/api-error-handler';
+import { apiError } from '@/helpers/apiErrorHandler';
 import { Goal } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const fs = require('fs').promises;

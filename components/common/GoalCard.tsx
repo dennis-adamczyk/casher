@@ -132,9 +132,11 @@ const GoalCardIcon = styled(ChevronRight).attrs(({ theme }) => ({ color: theme.c
 
 interface GoalCardProps
   extends Pick<Goal, 'name' | 'amount' | 'target_amount' | 'emojiIcon' | 'id'>,
-    GoalCardWrapperPros {}
+    GoalCardWrapperPros {
+  hideChevron?: boolean;
+}
 
-const GoalCard: FC<GoalCardProps> = ({ name, amount, target_amount, emojiIcon, id, ...props }) => {
+const GoalCard: FC<GoalCardProps> = ({ name, amount, target_amount, emojiIcon, id, hideChevron, ...props }) => {
   const progress = amount / target_amount;
 
   return (
@@ -155,7 +157,7 @@ const GoalCard: FC<GoalCardProps> = ({ name, amount, target_amount, emojiIcon, i
         <GoalCardProgressBarWrapper>
           <GoalCardProgressBar progress={progress} />
         </GoalCardProgressBarWrapper>
-        <GoalCardIcon />
+        {!hideChevron && <GoalCardIcon />}
       </GoalCardWrapper>
     </Link>
   );

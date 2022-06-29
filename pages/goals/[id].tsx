@@ -5,14 +5,14 @@ import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
 import { GetServerSideProps } from 'next/types';
 import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
-import { formatCurrency } from '@/helpers/formatter';
+import { formatCurrency, formatDate } from '@/helpers/formatter';
 import Select from '@/components/ui/Select';
 import {
   getIntervalMonthlyFactor,
   getSelectOptionFromInterval,
-  interval,
+  Interval,
   getAllSelectOptions,
-} from '@/constants/interval';
+} from '@/helpers/interval';
 import { DBClient } from '@/data/database';
 import { Goal, Goal_History, Analysis_Data } from '@prisma/client';
 
@@ -26,7 +26,7 @@ const GoalTitle = styled.h2(
   }),
 );
 
-const GoalRegularSpending = styled.h2(
+const GoalRegularSpending = styled.div(
   css({
     textAlign: 'center',
     fontSize: 5,
@@ -52,11 +52,11 @@ const GoalRegularSpendingText = styled.p(
 const GoalExpectedFinishHeader = styled.h2(
   css({
     textAlign: 'center',
-    fontSize: 4,
+    fontSize: 'large',
     fontWeight: 'semiBold',
     lineHeight: 'body',
     marginTop: 6,
-    marginBottom: 10,
+    marginBottom: 5,
   }),
 );
 
@@ -66,69 +66,67 @@ const GoalExpectedFinisherTimerWrapper = styled.div(
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'stretch',
+    marginBottom: 10,
   }),
 );
 
 const GoalExpectedFinisherTimerItem = styled.div(
   css({
-    marginLeft: 5,
-    marginRight: 5,
+    marginRight: 8,
+
+    '&:last-child': {
+      marginRight: 0,
+    },
   }),
 );
 
 const GoalExpectedFinisherTimerItemTime = styled.p(
   css({
     textAlign: 'center',
-    fontSize: 6,
-    fontWeight: 'Bold',
-    lineHeight: 'body',
-    marginRight: 5,
+    fontSize: 7,
   }),
 );
 
 const GoalExpectedFinisherTimerItemLabel = styled.p(
   css({
     textAlign: 'center',
-    fontSize: 4,
-    fontWeight: 'semiBold',
-    lineHeight: 'body',
-    marginRight: 5,
+    color: 'white.opacity.7',
   }),
 );
 
 const GoalPastSavingsHeader = styled.h2(
   css({
-    fontSize: 4,
+    fontSize: 5,
     fontWeight: 'semiBold',
     lineHeight: 'body',
-    marginRight: 5,
+    marginBottom: 4,
   }),
 );
 
 const GoalPastSavingsItem = styled.div(
   css({
-    marginLeft: 5,
-    marginRight: 5,
-    marginTop: 5,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'midnight.500',
+    borderRadius: 'smaller',
+    padding: 3,
+    marginBottom: 3,
   }),
 );
 
-const GoalPastSavingsItemLeft = styled.div(
+const GoalPastSavingsItemDate = styled.div(
   css({
-    float: 'left',
-    fontSize: 4,
-    fontWeight: 'semiBold',
     lineHeight: 'body',
     marginRight: 5,
   }),
 );
-const GoalPastSavingsItemRight = styled.div(
+
+const GoalPastSavingsItemAmount = styled.div(
   css({
-    float: 'right',
-    fontSize: 4,
     fontWeight: 'semiBold',
     lineHeight: 'body',
-    marginRight: 5,
+    textAlign: 'right',
   }),
 );
 
@@ -145,8 +143,8 @@ type data = Goal & {
 };
 
 const GoalPage: FC<{ goal: data }> = ({ goal }) => {
-  const [RemainingDays, setRemainingDays] = useState(calculateRemainingDays(goal, goal.savings_interval));
-  const [RemainingMonths, setRemainingMonths] = useState(calculateRemainingMonths(goal, goal.savings_interval));
+  const [remainingDays, setRemainingDays] = useState(calculateRemainingDays(goal, goal.savings_interval));
+  const [remainingMonths, setRemainingMonths] = useState(calculateRemainingMonths(goal, goal.savings_interval));
   const history: GoalHistory = JSON.parse(goal.history.values) as GoalHistory;
 
   return (
@@ -159,62 +157,63 @@ const GoalPage: FC<{ goal: data }> = ({ goal }) => {
           target_amount={goal.target_amount}
           emojiIcon={goal.emojiIcon}
           id={goal.id}
-          backgroundColor={'transparent'}
+          backgroundColor="transparent"
+          hideChevron
         />
       </GoalTitle>
-      <AnalysisLineChart
-        data={JSON.parse(goal.analysis_data.data || '') as AnalysisLineChartProps['data']}
-      ></AnalysisLineChart>
+      <AnalysisLineChart data={JSON.parse(goal.analysis_data.data || '') as AnalysisLineChartProps['data']} />
       <GoalRegularSpending>
         <GoalRegularSpendingText>{formatCurrency(goal.savings_amount)}</GoalRegularSpendingText>
         <Select
-          marginLeft={500}
           options={getAllSelectOptions()}
           defaultValue={getSelectOptionFromInterval(goal.savings_interval)}
           onChange={(value) => {
             let newSelect = value as { value: number; label: string };
 
-            setRemainingMonths(calculateRemainingMonths(goal, newSelect.value as interval));
-            setRemainingDays(calculateRemainingDays(goal, newSelect.value as interval));
+            setRemainingMonths(calculateRemainingMonths(goal, newSelect.value as Interval));
+            setRemainingDays(calculateRemainingDays(goal, newSelect.value as Interval));
           }}
         ></Select>
       </GoalRegularSpending>
       <GoalExpectedFinishHeader>Vorraussichtlich wirst du dein Ziel erreichen in</GoalExpectedFinishHeader>
       <GoalExpectedFinisherTimerWrapper>
         <GoalExpectedFinisherTimerItem>
-          <GoalExpectedFinisherTimerItemTime>{RemainingMonths}</GoalExpectedFinisherTimerItemTime>
+          <GoalExpectedFinisherTimerItemTime>{remainingMonths}</GoalExpectedFinisherTimerItemTime>
           <GoalExpectedFinisherTimerItemLabel>Monate</GoalExpectedFinisherTimerItemLabel>
         </GoalExpectedFinisherTimerItem>
         <GoalExpectedFinisherTimerItem>
-          <GoalExpectedFinisherTimerItemTime>{RemainingDays}</GoalExpectedFinisherTimerItemTime>
+          <GoalExpectedFinisherTimerItemTime>{remainingDays}</GoalExpectedFinisherTimerItemTime>
           <GoalExpectedFinisherTimerItemLabel>Tage</GoalExpectedFinisherTimerItemLabel>
         </GoalExpectedFinisherTimerItem>
       </GoalExpectedFinisherTimerWrapper>
-      <br></br>
+
       <GoalPastSavingsHeader>Einzahlungen</GoalPastSavingsHeader>
       {history.reverse().map((value, index) => (
-        <>
-          <GoalPastSavingsItem key={index}>
-            <GoalPastSavingsItemLeft>{formatCurrency(value.value)}</GoalPastSavingsItemLeft>
-            <GoalPastSavingsItemRight>{value.date}</GoalPastSavingsItemRight>
-          </GoalPastSavingsItem>
-          <br></br>
-        </>
+        <GoalPastSavingsItem key={index}>
+          <GoalPastSavingsItemDate>{formatDate(new Date(value.date))}</GoalPastSavingsItemDate>
+          <GoalPastSavingsItemAmount>{formatCurrency(value.value)}</GoalPastSavingsItemAmount>
+        </GoalPastSavingsItem>
       ))}
     </Content>
   );
 };
 
-function calculateRemainingMonths(pGoal: Goal, pInterval: interval): number {
+function calculateRemainingMonths(pGoal: Goal, pInterval: Interval): number {
+  if (typeof pInterval === 'string') {
+    pInterval = parseInt(pInterval, 10) as Interval;
+  }
   return Math.floor(
     (pGoal.target_amount - pGoal.amount) / (pGoal.savings_amount * getIntervalMonthlyFactor(pInterval)),
   );
 }
 
-function calculateRemainingDays(pGoal: Goal, pInterval: interval): number {
-  let paidPerMonth: number = pGoal.savings_amount * getIntervalMonthlyFactor(pInterval);
-  let remMonthsTotal: number = calculateRemainingMonths(pGoal, pInterval) * paidPerMonth;
-  let remPayedInDay: number = pGoal.target_amount - pGoal.amount - remMonthsTotal;
+function calculateRemainingDays(pGoal: Goal, pInterval: Interval): number {
+  if (typeof pInterval === 'string') {
+    pInterval = parseInt(pInterval, 10) as Interval;
+  }
+  const paidPerMonth: number = pGoal.savings_amount * getIntervalMonthlyFactor(pInterval);
+  const remMonthsTotal: number = calculateRemainingMonths(pGoal, pInterval) * paidPerMonth;
+  const remPayedInDay: number = pGoal.target_amount - pGoal.amount - remMonthsTotal;
   return Math.ceil(remPayedInDay / (paidPerMonth / 31));
 }
 

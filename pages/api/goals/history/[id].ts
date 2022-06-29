@@ -1,5 +1,5 @@
 import { DBClient } from '@/data/database';
-import { apiError } from '@/helpers/api-error-handler';
+import { apiError } from '@/helpers/apiErrorHandler';
 import { Goal_History } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

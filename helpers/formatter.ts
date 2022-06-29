@@ -13,3 +13,11 @@ export const formatMonth = (month: Date): string => {
 
   return formatter.format(month);
 };
+
+export const formatDate = (date: Date): string => {
+  if (!(date instanceof Date)) return '';
+
+  const formatter = Intl.DateTimeFormat('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  return formatter.format(date);
+};

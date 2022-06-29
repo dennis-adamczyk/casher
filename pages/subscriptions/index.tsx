@@ -2,7 +2,7 @@ import AddSubscriptionButton from '@/components/common/AddButton';
 import Collapse from '@/components/common/Collapse';
 import SubscriptionCard from '@/components/common/SubscriptionCard';
 import Content from '@/components/layout/Content';
-import { getIntervalMonthlyFactor } from '@/constants/interval';
+import { getIntervalMonthlyFactor } from '@/helpers/interval';
 import { DBClient } from '@/data/database';
 import { formatCurrency } from '@/helpers/formatter';
 import { Category, Subscription } from '@prisma/client';

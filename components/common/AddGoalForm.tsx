@@ -3,7 +3,7 @@ import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Select from '../ui/Select';
 import { AddFormProps, AddFormWrapper, AddFormTitle, AddFormButtons } from './AddForm';
-import { getAllSelectOptions } from '@/constants/interval';
+import { getAllSelectOptions } from '@/helpers/interval';
 
 const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
   return (
@@ -27,13 +27,12 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
 };
 
 async function test(event: any) {
-  event.preventDefault()
-  const result = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/goals', 
-  {
-    method: 'POST'
-  })
-  const content = await result.json()
-  console.log(content)
+  event.preventDefault();
+  const result = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/goals', {
+    method: 'POST',
+  });
+  const content = await result.json();
+  console.log(content);
 }
 
 export default AddSubscriptionForm;

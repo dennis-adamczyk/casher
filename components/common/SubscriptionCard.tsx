@@ -1,4 +1,4 @@
-import { getIntervalCaption } from '@/constants/interval';
+import { getIntervalCaption } from '@/helpers/interval';
 import { formatCurrency } from '@/helpers/formatter';
 import { Subscription } from '@prisma/client';
 import css from '@styled-system/css';

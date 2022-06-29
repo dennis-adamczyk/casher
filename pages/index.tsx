@@ -2,7 +2,7 @@ import AddAcountButton from '@/components/common/AddButton';
 import BankCard from '@/components/common/BankCard';
 import MoneyOverview from '@/components/common/MoneyOverview';
 import Content from '@/components/layout/Content';
-import { getIntervalMonthlyFactor } from '@/constants/interval';
+import { getIntervalMonthlyFactor } from '@/helpers/interval';
 import { DBClient } from '@/data/database';
 import { Bank_Account } from '@prisma/client';
 import css from '@styled-system/css';

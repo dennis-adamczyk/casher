@@ -1,6 +1,6 @@
-import { getIntervalMonthlyFactor } from '@/constants/interval';
+import { getIntervalMonthlyFactor } from '@/helpers/interval';
 import { DBClient } from '@/data/database';
-import { apiError } from '@/helpers/api-error-handler';
+import { apiError } from '@/helpers/apiErrorHandler';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
