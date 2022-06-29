@@ -57,7 +57,16 @@ const StyledInput = styled.input(
     border: 'none',
     backgroundColor: 'transparent',
     padding: 3,
+    MozAppearance: 'textfield'
   }),
+  `::-webkit-inner-spin-button{
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+  ::-webkit-outer-spin-button{
+      -webkit-appearance: none; 
+      margin: 0; 
+  }    `
 );
 
 const InputSuffix = styled.p(
