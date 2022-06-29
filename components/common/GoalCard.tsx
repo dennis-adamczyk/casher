@@ -1,5 +1,5 @@
 import { formatCurrency } from '@/helpers/formatter';
-import { GoalData } from '@/pages/goals';
+import { Goal } from '@prisma/client';
 import css from '@styled-system/css';
 import Link from 'next/link';
 import { FC } from 'react';
@@ -7,10 +7,10 @@ import { ChevronRight } from 'react-feather';
 import styled from 'styled-components';
 
 interface GoalCardWrapperPros {
-  backgroundColor?: string
+  backgroundColor?: string;
 }
 
-const GoalCardWrapper = styled.article<GoalCardWrapperPros>(({backgroundColor = 'midnight.400'})=>
+const GoalCardWrapper = styled.article<GoalCardWrapperPros>(({ backgroundColor = 'midnight.400' }) =>
   css({
     display: 'flex',
     flexDirection: 'column',
@@ -130,10 +130,12 @@ const GoalCardIcon = styled(ChevronRight).attrs(({ theme }) => ({ color: theme.c
   }),
 );
 
-interface GoalCardProps extends Pick<GoalData, 'name' | 'amount' | 'targetAmount' | 'emojiIcon' | 'id'>, GoalCardWrapperPros {}
+interface GoalCardProps
+  extends Pick<Goal, 'name' | 'amount' | 'target_amount' | 'emojiIcon' | 'id'>,
+    GoalCardWrapperPros {}
 
-const GoalCard: FC<GoalCardProps> = ({ name, amount, targetAmount, emojiIcon, id, ...props}) => {
-  const progress = amount / targetAmount;
+const GoalCard: FC<GoalCardProps> = ({ name, amount, target_amount, emojiIcon, id, ...props }) => {
+  const progress = amount / target_amount;
 
   return (
     <Link href={`/goals/${id}`} passHref>
@@ -146,14 +148,14 @@ const GoalCard: FC<GoalCardProps> = ({ name, amount, targetAmount, emojiIcon, id
             <GoalCardName>{name}</GoalCardName>
             <GoalCardAmountWrapper>
               <GoalCardAmount>{formatCurrency(amount)}</GoalCardAmount>
-              <GoalCardTargetAmount>/ {formatCurrency(targetAmount)}</GoalCardTargetAmount>
+              <GoalCardTargetAmount>/ {formatCurrency(target_amount)}</GoalCardTargetAmount>
             </GoalCardAmountWrapper>
           </GoalCardTextWrapper>
         </GoalCardContent>
         <GoalCardProgressBarWrapper>
           <GoalCardProgressBar progress={progress} />
         </GoalCardProgressBarWrapper>
-          <GoalCardIcon />
+        <GoalCardIcon />
       </GoalCardWrapper>
     </Link>
   );

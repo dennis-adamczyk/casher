@@ -1,8 +1,8 @@
 import { getIntervalCaption } from '@/constants/interval';
 import { formatCurrency } from '@/helpers/formatter';
-import { SubscriptionData } from '@/pages/subscriptions';
+import { Subscription } from '@prisma/client';
 import css from '@styled-system/css';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 import { margin, MarginProps } from 'styled-system';
 
@@ -55,7 +55,7 @@ const SubscriptionCardAmountInterval = styled.p(
 );
 
 interface SubscriptionCardProps
-  extends Pick<SubscriptionData, 'name' | 'amount' | 'interval'>,
+  extends Pick<Subscription, 'name' | 'amount' | 'interval'>,
     SubscriptionCardWrapperProps {}
 
 const SubscriptionCard: FC<SubscriptionCardProps> = ({ name, amount, interval, ...props }) => {

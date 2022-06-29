@@ -51,7 +51,7 @@ const EmptyDescription = styled.p(
   }),
 );
 
-const AnalysisPage: FC<{ analyses: (Analysis & {data: Analysis_Data})[] }> = (props) => {
+const AnalysisPage: FC<{ analyses: (Analysis & { data: Analysis_Data })[] }> = (props) => {
   const [analysisModules, setAnalysisModules] = useState(props.analyses);
 
   return (
@@ -69,27 +69,25 @@ const AnalysisPage: FC<{ analyses: (Analysis & {data: Analysis_Data})[] }> = (pr
           <AddButton>Neue Analyse</AddButton>
         </EmptyWrapper>
       )}
-      { analysisModules.map((analysis)=>(<AnalysisCard 
-        key={analysis.id} 
-        name={analysis.name}  
-        >
-        { 
-          analysis.type === "pie" ? <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps["data"]} /> : 
-                                    <AnalysisLineChart data={JSON.parse(analysis.data?.data || '') as AnalysisLineChartProps["data"]}/>
-        }
-        
-      </AnalysisCard>))}
+      {analysisModules.map((analysis) => (
+        <AnalysisCard key={analysis.id} name={analysis.name}>
+          {analysis.type === 'pie' ? (
+            <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps['data']} />
+          ) : (
+            <AnalysisLineChart data={JSON.parse(analysis.data?.data || '') as AnalysisLineChartProps['data']} />
+          )}
+        </AnalysisCard>
+      ))}
     </Content>
   );
 };
 
 export async function getServerSideProps(context: any) {
-  const data: (Analysis & {data: Analysis_Data})[] = await DBClient.analysis
-  .findMany({
-    include:{
-      data: true
-    }
-  })
+  const data: (Analysis & { data: Analysis_Data })[] = await DBClient.analysis.findMany({
+    include: {
+      data: true,
+    },
+  });
 
   return {
     props: { analyses: data },

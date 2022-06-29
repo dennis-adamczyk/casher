@@ -5,9 +5,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Category[]>) {
   try {
-    let category = await DBClient.category.findMany()
-    res.status(200).json(category)
+    let category = await DBClient.category.findMany();
+    res.status(200).json(category);
   } catch (error) {
-    apiError(error, res)
+    apiError(error, res);
   }
 }

@@ -10,7 +10,16 @@ export interface AnalysisPieChartProps {
 }
 
 const AnalysisPieChart: FC<AnalysisPieChartProps> = ({ data }) => {
-  const theme = useTheme()
-  return <Doughnut options={{ plugins: { legend: { position: 'left', labels: { color: theme.colors.body, font: {size: 16}} } }, aspectRatio: 2 }} data={data} />;};
+  const theme = useTheme();
+  return (
+    <Doughnut
+      options={{
+        plugins: { legend: { position: 'left', labels: { color: theme.colors.body, font: { size: 16 } } } },
+        aspectRatio: 2,
+      }}
+      data={data}
+    />
+  );
+};
 
 export default AnalysisPieChart;

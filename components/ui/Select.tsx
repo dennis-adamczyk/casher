@@ -141,7 +141,7 @@ const Select: FC<SelectProps> = ({ label, ...props }) => {
       {...{ margin, marginBottom, marginLeft, marginRight, marginTop, marginX, marginY, m, mb, ml, mr, mt, mx, my }}
     >
       <SelectLabel htmlFor={id}>{label}</SelectLabel>
-      
+
       {/* // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore */}
       <ReactSelect {...rest} components={{ DropdownIndicator }} styles={customStyles} id={id} />

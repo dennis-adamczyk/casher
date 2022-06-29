@@ -43,7 +43,7 @@ const Goals: FC<{ goals: Goal[] }> = ({ goals }) => {
           key={goal.id}
           name={goal.name}
           amount={goal.amount}
-          targetAmount={goal.target_amount}
+          target_amount={goal.target_amount}
           emojiIcon={goal.emojiIcon}
           id={goal.id}
         />

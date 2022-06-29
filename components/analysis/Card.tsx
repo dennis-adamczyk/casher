@@ -13,7 +13,7 @@ const AnalysisCardWrapper = styled.article(
     backgroundColor: 'midnight.400',
     borderRadius: 'normal',
     overflow: 'hidden',
-    marginBottom: 5
+    marginBottom: 5,
   }),
 );
 

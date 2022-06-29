@@ -153,7 +153,7 @@ const banks = {
 
 export type BankName = keyof typeof banks;
 
-export interface BankCardData {
+interface BankCardData {
   id: number;
   bank: BankName;
   bankName?: string;

@@ -2,7 +2,7 @@ import AddSubscriptionButton from '@/components/common/AddButton';
 import Collapse from '@/components/common/Collapse';
 import SubscriptionCard from '@/components/common/SubscriptionCard';
 import Content from '@/components/layout/Content';
-import { getIntervalMonthlyFactor, interval } from '@/constants/interval';
+import { getIntervalMonthlyFactor } from '@/constants/interval';
 import { DBClient } from '@/data/database';
 import { formatCurrency } from '@/helpers/formatter';
 import { Category, Subscription } from '@prisma/client';
@@ -78,8 +78,11 @@ type data = (Category & {
   subscriptions: Subscription[];
 })[];
 
-const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number }> = ({ categories, totalSubscriptionCost }) => {
-  categories[0]
+const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number }> = ({
+  categories,
+  totalSubscriptionCost,
+}) => {
+  categories[0];
   return (
     <Content>
       <SubscriptionsHeader>
@@ -89,22 +92,13 @@ const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number 
           <SubscriptionsTotalInterval>monatlich</SubscriptionsTotalInterval>
         </SubscriptionsTotalWrapper>
       </SubscriptionsHeader>
-    	{
-        categories.map((category, index) => (
-          <SubscriptionCollapse title={category.name} defaultOpen={index === 0} key={category.id}>
-            {
-              category.subscriptions.map((sub) => (
-                <SubscriptionCollapseCard
-                  name={sub.name}
-                  amount={sub.amount}
-                  interval={sub.interval}
-                  key={sub.id}
-                />
-              ))
-            }
-          </SubscriptionCollapse>
-        ))
-      }
+      {categories.map((category, index) => (
+        <SubscriptionCollapse title={category.name} defaultOpen={index === 0} key={category.id}>
+          {category.subscriptions.map((sub) => (
+            <SubscriptionCollapseCard name={sub.name} amount={sub.amount} interval={sub.interval} key={sub.id} />
+          ))}
+        </SubscriptionCollapse>
+      ))}
       <AddSubscriptionButton href="/subscriptions/new">Neues Abo</AddSubscriptionButton>
     </Content>
   );
