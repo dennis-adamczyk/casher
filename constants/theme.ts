@@ -129,6 +129,7 @@ const colors: StyleSystem['colors'] = {
     default: '#FE4B4B',
     opacity: {
       1: rgba('#FE4B4B', 0.1),
+      8: rgba('#FE4B4B', 0.8),
     },
   },
   midnight: {

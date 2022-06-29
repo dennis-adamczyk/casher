@@ -122,11 +122,16 @@ const GoalPastSavingsItemDate = styled.div(
   }),
 );
 
-const GoalPastSavingsItemAmount = styled.div(
+interface GoalPastSavingsItemAmountProps {
+  negative?: boolean;
+}
+
+const GoalPastSavingsItemAmount = styled.div<GoalPastSavingsItemAmountProps>(({ negative }) =>
   css({
     fontWeight: 'semiBold',
     lineHeight: 'body',
     textAlign: 'right',
+    color: negative ? 'red.opacity.8' : 'blue.200',
   }),
 );
 
@@ -188,10 +193,12 @@ const GoalPage: FC<{ goal: data }> = ({ goal }) => {
       </GoalExpectedFinisherTimerWrapper>
 
       <GoalPastSavingsHeader>Einzahlungen</GoalPastSavingsHeader>
-      {history.reverse().map((value, index) => (
+      {history.reverse().map((record, index) => (
         <GoalPastSavingsItem key={index}>
-          <GoalPastSavingsItemDate>{formatDate(new Date(value.date))}</GoalPastSavingsItemDate>
-          <GoalPastSavingsItemAmount>{formatCurrency(value.value)}</GoalPastSavingsItemAmount>
+          <GoalPastSavingsItemDate>{formatDate(new Date(record.date))}</GoalPastSavingsItemDate>
+          <GoalPastSavingsItemAmount negative={record.value < 0}>
+            {formatCurrency(record.value)}
+          </GoalPastSavingsItemAmount>
         </GoalPastSavingsItem>
       ))}
     </Content>
