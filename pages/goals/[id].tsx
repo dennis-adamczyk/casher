@@ -21,7 +21,6 @@ const GoalTitle = styled.h2(
     fontSize: 5,
     fontWeight: 'semiBold',
     lineHeight: 'body',
-    marginTop: 6,
     marginBottom: 10,
   }),
 );
@@ -110,7 +109,8 @@ const GoalPastSavingsItem = styled.div(
     alignItems: 'center',
     backgroundColor: 'midnight.500',
     borderRadius: 'smaller',
-    padding: 3,
+    paddingX: 4,
+    paddingY: 3,
     marginBottom: 3,
   }),
 );
