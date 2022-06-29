@@ -1,5 +1,5 @@
 import css from '@styled-system/css';
-import { FC, useId } from 'react';
+import { FC, forwardRef, useId } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { margin, MarginProps } from 'styled-system';
 import ReactSelect, { StylesConfig, components, DropdownIndicatorProps, Props as ReactSelectProps } from 'react-select';
@@ -35,13 +35,13 @@ const DropdownIndicator = (props: DropdownIndicatorProps) => {
   );
 };
 
-type Option = { value: number | string; label: string };
+export type Option = { value: number | string; label: string };
 
 interface SelectProps extends ReactSelectProps<Option>, SelectSetWrapperProps {
   label?: string;
 }
 
-const Select: FC<SelectProps> = ({ label, ...props }) => {
+const Select = forwardRef<any, SelectProps>(({ label, ...props }, ref) => {
   const id = useId();
   const theme = useTheme();
   const customStyles: StylesConfig = {
@@ -123,9 +123,19 @@ const Select: FC<SelectProps> = ({ label, ...props }) => {
 
       {/* // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore */}
-      <ReactSelect {...rest} isSearchable={false} components={{ DropdownIndicator }} styles={customStyles} id={id} />
+      <ReactSelect
+        {...rest}
+        isSearchable={false}
+        placeholder="Auswählen..."
+        components={{ DropdownIndicator }}
+        styles={customStyles}
+        id={id}
+        ref={ref}
+      />
     </SelectSetWrapper>
   );
-};
+});
+
+Select.displayName = 'Select';
 
 export default Select;
