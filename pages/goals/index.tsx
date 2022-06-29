@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import css from '@styled-system/css';
 import GoalCard from '@/components/common/GoalCard';
 import AddGoalButton from '@/components/common/AddButton';
-import { AnalysisDataLine } from '../analysis';
-import { interval } from '@/constants/interval';
+import { DBClient } from '@/data/database';
+import { Goal } from '@prisma/client';
 
 const GoalTitle = styled.h2(
   css({
@@ -31,20 +31,7 @@ const GoalTitleSecondary = styled.span(
   }),
 );
 
-export interface GoalData {
-  id: number;
-  bankAccountId: number;
-  emojiIcon: string;
-  name: string;
-  targetAmount: number;
-  amount: number;
-  savingIntervall: interval;
-  savingAmount: number;
-  data: AnalysisDataLine;
-  historyId: number;
-}
-
-const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {
+const Goals: FC<{ goals: Goal[] }> = ({ goals }) => {
   return (
     <Content>
       <GoalTitle>
@@ -56,7 +43,7 @@ const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {
           key={goal.id}
           name={goal.name}
           amount={goal.amount}
-          targetAmount={goal.targetAmount}
+          targetAmount={goal.target_amount}
           emojiIcon={goal.emojiIcon}
           id={goal.id}
         />
@@ -69,9 +56,8 @@ const Goals: FC<{ goals: GoalData[] }> = ({ goals }) => {
 export default Goals;
 
 export async function getServerSideProps(context: any) {
-  const res = await fetch(`http://localhost:3000/api/goals`);
-  const data: GoalData[] = await res.json();
+  const goals = await DBClient.goal.findMany();
   return {
-    props: { goals: data },
+    props: { goals: goals },
   };
 }

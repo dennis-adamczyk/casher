@@ -2,6 +2,7 @@ import AddGoalForm from '@/components/common/AddGoalForm';
 import { BankCardData } from '@/components/common/BankCard';
 import Content from '@/components/layout/Content';
 import { selectOption } from '@/constants/selectOptions';
+import { DBClient } from '@/data/database';
 import type { GetServerSideProps, NextPage } from 'next';
 
 export interface AddGoalProps {
@@ -17,12 +18,10 @@ const Goals: NextPage<AddGoalProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const accRes = await fetch(`http://localhost:3000/api/cards`);
-
-  const accData = await accRes.json() as BankCardData[]
+  const accounts = await DBClient.bank_Account.findMany()
   
-  const accOptions: selectOption[] = accData.map((acc)=>{
-    return {value: acc.id, label: acc.bankName || ''}
+  const accOptions: selectOption[] = accounts.map((acc)=>{
+    return {value: acc.id, label: acc.bank_name || ''}
   })
   return {
     props: {accounts: accOptions}

@@ -2,7 +2,6 @@ import { getIntervalMonthlyFactor } from '@/constants/interval';
 import { DBClient } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import type { NextApiRequest, NextApiResponse } from 'next';
-const fs = require('fs').promises;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<{bankAccountId: string, totalMonthlySavings: number}>) {
   const { id } = req.query;

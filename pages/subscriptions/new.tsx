@@ -3,23 +3,13 @@ import { BankCardData } from '@/components/common/BankCard';
 import Content from '@/components/layout/Content';
 import { interval } from '@/constants/interval';
 import { selectOption } from '@/constants/selectOptions';
+import { DBClient } from '@/data/database';
 import type { GetServerSideProps, NextPage } from 'next';
-import { CategoryData } from '.';
-
-export interface SubscriptionData {
-  id: number;
-  name: string;
-  amount: number;
-  bankAccountId: number;
-  categoryId: number;
-  interval: interval;
-}
 
 export interface AddSubscriptionsProps {
   accounts: selectOption[]
   categories: selectOption[]
 }
-
 
 const Subscriptions: NextPage<AddSubscriptionsProps> = (props) => {
   return (
@@ -30,16 +20,13 @@ const Subscriptions: NextPage<AddSubscriptionsProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const accRes = await fetch(`http://localhost:3000/api/cards`);
-  const catRes = await fetch(`http://localhost:3000/api/categories`);
-
-  const accData = await accRes.json() as BankCardData[]
-  const catData = await catRes.json() as CategoryData[]
+  const accounts = await DBClient.bank_Account.findMany()
+  const categories = await DBClient.category.findMany()
   
-  const accOptions: selectOption[] = accData.map((acc)=>{
-    return {value: acc.id, label: acc.bankName || ''}
+  const accOptions: selectOption[] = accounts.map((acc)=>{
+    return {value: acc.id, label: acc.bank_name || ''}
   })
-  const catOptions: selectOption[] = catData.map((cat)=>{
+  const catOptions: selectOption[] = categories.map((cat)=>{
     return {value: cat.id, label: cat.name}
   })
   return {

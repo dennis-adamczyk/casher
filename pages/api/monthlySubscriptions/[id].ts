@@ -3,15 +3,21 @@ import { DBClient } from '@/data/database';
 import { apiError } from '@/helpers/api-error-handler';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<{bankAccountId: string, totalMonthlySubscriptions: number}>) {
-  const{ id } = req.query;
-  let bid = id as string
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<{ bankAccountId: string; totalMonthlySubscriptions: number }>,
+) {
+  const { id } = req.query;
+  let bid = id as string;
 
   try {
-    const goals = await DBClient.subscription.findMany({where:{bank_account_id: bid}})
-    const totalMonthlySubCost = goals.reduce((prev, sub)=> prev + (sub.amount * getIntervalMonthlyFactor(sub.interval)), 0)
-    res.status(200).json({bankAccountId: bid, totalMonthlySubscriptions: totalMonthlySubCost})
+    const goals = await DBClient.subscription.findMany({ where: { bank_account_id: bid } });
+    const totalMonthlySubCost = goals.reduce(
+      (prev, sub) => prev + sub.amount * getIntervalMonthlyFactor(sub.interval),
+      0,
+    );
+    res.status(200).json({ bankAccountId: bid, totalMonthlySubscriptions: totalMonthlySubCost });
   } catch (error) {
-    apiError(error, res)
+    apiError(error, res);
   }
 }

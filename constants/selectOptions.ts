@@ -1,1 +1,1 @@
-export type selectOption = {value: number, label: string}
+export type selectOption = {value: string, label: string}
