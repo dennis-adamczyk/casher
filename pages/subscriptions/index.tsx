@@ -82,7 +82,6 @@ const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number 
   categories,
   totalSubscriptionCost,
 }) => {
-  categories[0];
   return (
     <Content>
       <SubscriptionsHeader>

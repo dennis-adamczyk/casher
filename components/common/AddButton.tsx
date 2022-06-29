@@ -7,6 +7,8 @@ const AddButton = styled(Button).attrs({ bg: 'midnight.500', iconBefore: <Plus /
   css({
     marginTop: 5,
     marginX: 'auto',
+    color: 'white.default',
+    width: 'fit-content',
   }),
 );
 
