@@ -14,7 +14,7 @@ const ProfileInfoWrapper = styled.div(
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 6,
   }),
 );
 

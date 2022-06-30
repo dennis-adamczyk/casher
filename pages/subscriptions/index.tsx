@@ -74,12 +74,15 @@ const SubscriptionCollapseCard = styled(SubscriptionCard)(
   }),
 );
 
-const AddButtonWrapper = styled.div(css({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-}))
+const AddButtonWrapper = styled.div(
+  css({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    columnGap: 4,
+  }),
+);
 
 type data = (Category & {
   subscriptions: Subscription[];
@@ -106,8 +109,12 @@ const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number 
         </SubscriptionCollapse>
       ))}
       <AddButtonWrapper>
-        <AddSubscriptionButton href="/category/new" mr={4}>Neue Kategorie</AddSubscriptionButton>
-        <AddSubscriptionButton href="/subscriptions/new" mr={4}>Neues Abo</AddSubscriptionButton>  
+        <AddSubscriptionButton href="/category/new" mx={0}>
+          Neue Kategorie
+        </AddSubscriptionButton>
+        <AddSubscriptionButton href="/subscriptions/new" mx={0}>
+          Neues Abo
+        </AddSubscriptionButton>
       </AddButtonWrapper>
     </Content>
   );

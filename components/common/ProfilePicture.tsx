@@ -30,14 +30,7 @@ const ProfilePicture: FC<ProfilePictureProps> = ({
 }) => {
   return (
     <ProfilePictureWrapper size={size}>
-      <Image
-        src={src}
-        alt="Dein Profil"
-        // width={48}
-        // height={48}
-        layout="fill"
-        objectFit="cover"
-      />
+      <Image src={src} alt="Dein Profil" layout="fill" objectFit="cover" unoptimized />
     </ProfilePictureWrapper>
   );
 };
