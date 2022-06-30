@@ -9,6 +9,7 @@ import { Goal } from '@prisma/client';
 
 const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
   const { back } = useRouter();
+  const intervalOptions = getAllSelectOptions();
   const [formData, setFormData] = useState<Partial<Goal>>({
     amount: 0,
     emojiIcon: '',
@@ -17,12 +18,14 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
     savings_interval: 3,
     target_amount: 0,
   });
+
   const changeFormData = (field: keyof Goal, isInt?: boolean) =>
     ((event) =>
       setFormData((formData) => ({
         ...formData,
-        [field]: isInt ? parseInt(event.target.value, 10) : event.target.value,
+        [field]: isInt ? parseFloat(event.target.value) : event.target.value,
       }))) as ChangeEventHandler<HTMLInputElement>;
+
   const onSubmit = async (event: any) => {
     event.preventDefault();
     console.log(formData);
@@ -30,10 +33,10 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
       method: 'POST',
       body: JSON.stringify(formData),
     });
+
     const content = await result.json();
     console.log(content);
   };
-  const intervalOptions = getAllSelectOptions();
 
   return (
     <AddFormWrapper onSubmit={onSubmit}>
