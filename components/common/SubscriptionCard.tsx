@@ -1,6 +1,6 @@
 import { getIntervalCaption } from '@/helpers/interval';
 import { formatCurrency } from '@/helpers/formatter';
-import { Subscription } from '@prisma/client';
+import { Bank_Account, Subscription } from '@prisma/client';
 import css from '@styled-system/css';
 import { FC } from 'react';
 import styled from 'styled-components';
@@ -20,10 +20,27 @@ const SubscriptionCardWrapper = styled.article(
   margin,
 );
 
+const SubscriptionCardNameWrapper = styled.div(
+  css({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  }),
+);
+
 const SubscriptionCardName = styled.h3(
   css({
     fontSize: 'large',
     fontWeight: 'medium',
+  }),
+);
+
+const SubscriptionCardBankName = styled.p(
+  css({
+    fontSize: 'small',
+    color: 'white.opacity.5',
+    lineHeight: 'body',
   }),
 );
 
@@ -37,11 +54,16 @@ const SubscriptionCardAmountWrapper = styled.div(
   }),
 );
 
-const SubscriptionCardAmount = styled.p(
+interface SubscriptionCardAmountProps {
+  positive?: boolean;
+}
+
+const SubscriptionCardAmount = styled.p<SubscriptionCardAmountProps>(({ positive }) =>
   css({
     fontWeight: 'medium',
     textAlign: 'right',
     lineHeight: 'body',
+    color: positive ? 'blue.200' : 'white.default',
   }),
 );
 
@@ -56,14 +78,18 @@ const SubscriptionCardAmountInterval = styled.p(
 
 interface SubscriptionCardProps
   extends Pick<Subscription, 'name' | 'amount' | 'interval'>,
+    Pick<Bank_Account, 'bank_name'>,
     SubscriptionCardWrapperProps {}
 
-const SubscriptionCard: FC<SubscriptionCardProps> = ({ name, amount, interval, ...props }) => {
+const SubscriptionCard: FC<SubscriptionCardProps> = ({ name, amount, interval, bank_name, ...props }) => {
   return (
     <SubscriptionCardWrapper {...props}>
-      <SubscriptionCardName>{name}</SubscriptionCardName>
+      <SubscriptionCardNameWrapper>
+        <SubscriptionCardName>{name}</SubscriptionCardName>
+        <SubscriptionCardBankName>{bank_name}</SubscriptionCardBankName>
+      </SubscriptionCardNameWrapper>
       <SubscriptionCardAmountWrapper>
-        <SubscriptionCardAmount>{formatCurrency(amount)}</SubscriptionCardAmount>
+        <SubscriptionCardAmount positive={amount > 0}>{formatCurrency(Math.abs(amount))}</SubscriptionCardAmount>
         <SubscriptionCardAmountInterval>{getIntervalCaption(interval)}</SubscriptionCardAmountInterval>
       </SubscriptionCardAmountWrapper>
     </SubscriptionCardWrapper>

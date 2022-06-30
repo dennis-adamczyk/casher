@@ -113,9 +113,12 @@ export async function getServerSideProps(context: any) {
         },
       });
 
-      const monthlySubCost = goals.reduce((prev, current) => {
-        return prev + current.amount * getIntervalMonthlyFactor(current.interval);
-      }, 0);
+      const monthlySubCost = goals
+        .filter((goal) => goal.amount < 0)
+        .map((goal) => ({ ...goal, amount: Math.abs(goal.amount) }))
+        .reduce((prev, current) => {
+          return prev + current.amount * getIntervalMonthlyFactor(current.interval);
+        }, 0);
 
       return {
         bankAccountId: acc.id,

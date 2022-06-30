@@ -6,10 +6,12 @@ import { AddFormProps, AddFormWrapper, AddFormTitle, AddFormButtons } from './Ad
 import { getAllSelectOptions } from '@/helpers/interval';
 import { useRouter } from 'next/router';
 import { Subscription } from '@prisma/client';
+import Switch from '../ui/Switch';
 
 const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts, categories }) => {
   const { back, push } = useRouter();
   const intervalOptions = getAllSelectOptions();
+  const [isIncome, setIsIncome] = useState(false);
   const [formData, setFormData] = useState<Partial<Subscription>>({
     amount: 0,
     name: '',
@@ -26,6 +28,9 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts, categories }) 
   const onSubmit = async (event: any) => {
     event.preventDefault();
     console.log(formData);
+    if (!isIncome && formData.amount !== undefined) {
+      formData.amount = -formData.amount;
+    }
     const result = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/subscription', {
       method: 'POST',
       body: JSON.stringify(formData),
@@ -44,10 +49,11 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts, categories }) 
     <AddFormWrapper onSubmit={onSubmit}>
       <AddFormTitle>{title}</AddFormTitle>
       <Input onChange={changeFormData('name')} value={formData.name} label="Name des Ziels" />
+      <Switch label={['Ausgabe', 'Einkommen']} value={isIncome} onChange={setIsIncome} />
       <Input
         onChange={changeFormData('amount', true)}
         value={formData.amount}
-        label="Reguläre kosten"
+        label={isIncome ? 'Reguläres Einkommen' : 'Reguläre Kosten'}
         suffix="€"
         min={0}
         step="0.01"

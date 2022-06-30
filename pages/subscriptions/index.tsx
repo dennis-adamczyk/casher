@@ -5,7 +5,7 @@ import Content from '@/components/layout/Content';
 import { getIntervalMonthlyFactor } from '@/helpers/interval';
 import { DBClient } from '@/data/database';
 import { formatCurrency } from '@/helpers/formatter';
-import { Category, Subscription } from '@prisma/client';
+import { Bank_Account, Category, Subscription } from '@prisma/client';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
 import styled from 'styled-components';
@@ -86,7 +86,9 @@ const AddButtonWrapper = styled.div(
 );
 
 type data = (Category & {
-  subscriptions: Subscription[];
+  subscriptions: (Subscription & {
+    bank_account: Bank_Account;
+  })[];
 })[];
 
 const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number }> = ({
@@ -96,7 +98,7 @@ const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number 
   return (
     <Content>
       <SubscriptionsHeader>
-        <SubscriptionsTitle>Regelmäßige Ausgaben</SubscriptionsTitle>
+        <SubscriptionsTitle>Regelmäßige Veränderung</SubscriptionsTitle>
         <SubscriptionsTotalWrapper>
           <SubscriptionsTotal>{formatCurrency(totalSubscriptionCost)}</SubscriptionsTotal>
           <SubscriptionsTotalInterval>monatlich</SubscriptionsTotalInterval>
@@ -105,7 +107,13 @@ const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number 
       {categories.map((category, index) => (
         <SubscriptionCollapse title={category.name} defaultOpen={index === 0} key={category.id}>
           {category.subscriptions.map((sub) => (
-            <SubscriptionCollapseCard name={sub.name} amount={sub.amount} interval={sub.interval} key={sub.id} />
+            <SubscriptionCollapseCard
+              name={sub.name}
+              amount={sub.amount}
+              interval={sub.interval}
+              key={sub.id}
+              bank_name={sub.bank_account.bank_name}
+            />
           ))}
         </SubscriptionCollapse>
       ))}
@@ -124,7 +132,11 @@ const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number 
 export async function getServerSideProps(context: any) {
   const data = await DBClient.category.findMany({
     include: {
-      subscriptions: true,
+      subscriptions: {
+        include: {
+          bank_account: true,
+        },
+      },
     },
   });
 

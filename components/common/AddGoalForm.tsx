@@ -52,6 +52,7 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
         onChange={changeFormData('target_amount', true)}
         value={formData.target_amount}
         label="Zielbetrag"
+        min={0}
         suffix="€"
         step="0.01"
         type="number"
@@ -60,6 +61,7 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
         onChange={changeFormData('savings_amount', true)}
         value={formData.savings_amount}
         label="Regulärer Betrag"
+        min={0}
         suffix="€"
         step="0.01"
         type="number"
@@ -68,6 +70,7 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
         onChange={changeFormData('amount', true)}
         value={formData.amount}
         label="Startbetrag"
+        min={0}
         suffix="€"
         step="0.01"
         type="number"
