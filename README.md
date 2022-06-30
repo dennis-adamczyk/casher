@@ -1,12 +1,13 @@
 # Casher
 
-Casher is a finance app (PWA) that categorizes your transactions and gives an overview of your expenses, income, subscriptions, and savings goals.
+Casher is a Software as a Service solution that provides a Usercentric 
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
+yarn install
 yarn dev
 ```
 
