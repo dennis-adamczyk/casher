@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { Category, Goal } from '@prisma/client';
 
 const AddCategoryForm: FC<AddFormProps> = ({ title }) => {
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const [formData, setFormData] = useState<Partial<Category>>({
     name: '',
   });
@@ -26,8 +26,13 @@ const AddCategoryForm: FC<AddFormProps> = ({ title }) => {
       body: JSON.stringify(formData),
     });
 
-    const content = await result.json();
-    console.log(content);
+    const { success } = await result.json();
+
+    if (success) {
+      push('/subscriptions');
+    } else {
+      alert('Upsi! Da ist etwas schief gelaufen...');
+    }
   };
 
   return (
