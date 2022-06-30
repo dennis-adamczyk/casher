@@ -64,7 +64,7 @@ const Home: NextPage<{
         {cards.map((card) => (
           <BankCard
             key={card.id}
-            bank={card.bank as 'placeholder' | 'sparkasse' | 'volksbank' | 'commerzbank'}
+            bank={card.bank as | 'sparkasse' | 'volksbank' | 'commerzbank'}
             bankName={card.bank_name}
             holder={card.holder}
             iban={card.iban}
