@@ -53,9 +53,9 @@ model Goal {
   id               String         @id @default(cuid())
   name             String
   emojiIcon        String?
-  target_amount    Int
-  amount           Int
-  savings_amount   Int
+  target_amount    Float
+  amount           Float
+  savings_amount   Float
   savings_interval Int
   analysis_data_id String?        @unique
   bank_account_id  String
