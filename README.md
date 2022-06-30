@@ -1,6 +1,6 @@
 # Casher
 
-Casher is a Software as a Service solution that provides a usercentric, bulletproof, typesafe, valid, battletested, blazingly fast, serverside-renderd, Progressive-Web-App (PWA) which, with the help of a centrelised AI-Service, automatically analyzes realtime Finance Big Data and provides the user with actionable Analytics. 
+Casher is a Software as a Service solution that provides a usercentric, bulletproof, typesafe, valid, battletested, blazingly fast, serverside-renderd, Progressive-Web-App (PWA) which, with the help of a centrelised AI-Service, automatically analyzes realtime Finance Big Data and provides the user with actionable Analytics.
 
 ## Getting Started
 
@@ -13,13 +13,29 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Prisma Database
+
+[Prisma Client JS](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/api) is a type-safe database client auto-generated based on the data model.
+
+Before you get started, generate Prisma Client JS by running
+
+> **Note**: Every time you update [schema.prisma](prisma/schema.prisma) re-generate Prisma Client JS
+
+```bash
+npx prisma generate
+# or
+yarn prisma:generate
+```
+
+If you want to view or edit data in database, thanks to the help of Prima Studio, it is as easy as running:
+
+```bash
+npx prisma studio
+# or
+yarn primsa:studio
+```
+
 ## Auth0 Configuration
-
-### Create an API
-
-For the **External API** page to work, you will need to [create an API](https://auth0.com/docs/authorization/apis) using the [management dashboard](https://manage.auth0.com/#/apis). This will give you an API Identifier that you can use in the `AUTH0_AUDIENCE` environment variable below. Then you will need to [add a permission](https://auth0.com/docs/get-started/dashboard/add-api-permissions) named `read:shows` to your API. To get your app to ask for that permission, include it in the value of the `AUTH0_SCOPE` environment variable.
-
-If you do not wish to use an API or observe the API call working, you should not specify the `AUTH0_AUDIENCE` and `AUTH0_SCOPE` values in the next steps.
 
 ### Configure credentials
 
