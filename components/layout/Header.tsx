@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import css from '@styled-system/css';
 import ProfilePicture from '../common/ProfilePicture';
 import { rgba } from 'polished';
+import Link from 'next/link';
 
 const HeaderWrapper = styled.header(({ theme }) =>
   css({
@@ -22,13 +23,34 @@ const HeaderWrapper = styled.header(({ theme }) =>
   }),
 );
 
+const LogoLink = styled.a(
+  css({
+    cursor: 'pointer',
+  }),
+);
+
+const ProfilePictureLink = styled.a(
+  css({
+    cursor: 'pointer',
+  }),
+);
+
 interface HeaderProps {}
 
 const Header: FC<HeaderProps> = () => {
   return (
     <HeaderWrapper>
-      <Image src={logo} alt="Casher" />
-      <ProfilePicture />
+      <Link href="/" passHref>
+        <LogoLink>
+          <Image src={logo} alt="Casher" />
+        </LogoLink>
+      </Link>
+
+      <Link href="/profile" passHref>
+        <ProfilePictureLink>
+          <ProfilePicture />
+        </ProfilePictureLink>
+      </Link>
     </HeaderWrapper>
   );
 };

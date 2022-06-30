@@ -18,7 +18,7 @@ function App({ Component, pageProps }: AppProps) {
           <meta name="color-scheme" content="dark" />
         </Head>
         <GlobalStyle />
-        <Header />
+        {!pageProps?.hideHeader && <Header />}
         <Component {...pageProps} />
         <BottomTabNavigation
           items={[
