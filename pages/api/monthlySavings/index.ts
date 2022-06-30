@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { DBClient } from '@/data/database';
 import { getIntervalMonthlyFactor } from '@/helpers/interval';
 import { apiError } from '@/helpers/apiErrorHandler';
-const fs = require('fs').promises;
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<number>) {
+export default withApiAuthRequired(async function handler(req: NextApiRequest, res: NextApiResponse<number>) {
   try {
     const goals = await DBClient.goal.findMany();
     const totalMonthlyGoalCost = goals.reduce(
@@ -15,4 +15,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } catch (error) {
     apiError(error, res);
   }
-}
+});

@@ -1,5 +1,6 @@
 import BottomTabNavigation from '@/components/layout/BottomTabNavigation';
-import { UserProvider } from '@auth0/nextjs-auth0';
+import Layout from '@/components/layout/Layout';
+import { UserProvider, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Flag, Home, PieChart, RotateCcw } from 'react-feather';
@@ -18,16 +19,9 @@ function App({ Component, pageProps }: AppProps) {
           <meta name="color-scheme" content="dark" />
         </Head>
         <GlobalStyle />
-        {!pageProps?.hideHeader && <Header />}
-        <Component {...pageProps} />
-        <BottomTabNavigation
-          items={[
-            { name: 'Übersicht', href: '/', icon: <Home /> },
-            { name: 'Analyse', href: '/analysis', icon: <PieChart /> },
-            { name: 'Abos', href: '/subscriptions', icon: <RotateCcw /> },
-            { name: 'Sparziele', href: '/goals', icon: <Flag /> },
-          ]}
-        />
+        <Layout hideHeader={pageProps?.hideHeader}>
+          <Component {...pageProps} />
+        </Layout>
       </ThemeProvider>
     </UserProvider>
   );

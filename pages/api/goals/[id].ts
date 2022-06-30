@@ -1,10 +1,10 @@
 import { DBClient } from '@/data/database';
 import { apiError } from '@/helpers/apiErrorHandler';
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { Goal } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-const fs = require('fs').promises;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Goal>) {
+export default withApiAuthRequired(async function handler(req: NextApiRequest, res: NextApiResponse<Goal>) {
   const { id } = req.query;
   const goal_id = id as string;
 
@@ -21,4 +21,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } catch (error) {
     apiError(error, res);
   }
-}
+});

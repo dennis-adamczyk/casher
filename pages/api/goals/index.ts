@@ -1,9 +1,10 @@
 import { DBClient } from '@/data/database';
 import { apiError } from '@/helpers/apiErrorHandler';
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { Goal } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Goal[]>) {
+export default withApiAuthRequired(async function handler(req: NextApiRequest, res: NextApiResponse<Goal[]>) {
   try {
     if (req.method == 'GET') {
       const goals = await DBClient.goal.findMany();
@@ -12,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const newGoal = JSON.parse(req.body) as Goal;
       console.log(
         await DBClient.goal.create({
-          data: newGoal
+          data: newGoal,
         }),
       );
       console.log(newGoal);
@@ -21,4 +22,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } catch (error) {
     apiError(error, res);
   }
-}
+});

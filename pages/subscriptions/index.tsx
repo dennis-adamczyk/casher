@@ -9,6 +9,7 @@ import { Category, Subscription } from '@prisma/client';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
 import styled from 'styled-components';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 const SubscriptionsHeader = styled.header(
   css({
@@ -138,4 +139,4 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-export default Subscriptions;
+export default withPageAuthRequired(Subscriptions);
