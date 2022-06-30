@@ -9,7 +9,7 @@ import AnalysisCard from '@/components/analysis/Card';
 import AnalysisPieChart, { AnalysisPieChartProps } from '@/components/analysis/Pie';
 import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
 import { DBClient } from '@/data/database';
-import { Analysis, Analysis_Data, Category, Subscription } from '@prisma/client';
+import { Analysis, Analysis_Data, Category, Goal, Subscription } from '@prisma/client';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 const EmptyWrapper = styled.div(
@@ -52,7 +52,8 @@ const EmptyDescription = styled.p(
   }),
 );
 
-const AnalysisPage: FC<{ analyses: (Analysis & { data: Analysis_Data })[], labelData: (Category & {subscriptions: Subscription[]; })[] }> = (props) => {
+const AnalysisPage: FC<{ analyses: (Analysis & { data: Analysis_Data })[], 
+labelData: (Category & {subscriptions: Subscription[]; })[], goalData: Goal[]}> = (props) => {
   const [analysisModules, setAnalysisModules] = useState(props.analyses);
 
   function getAnalysis(analysis: Analysis & { data: Analysis_Data }): JSX.Element{
@@ -60,9 +61,11 @@ const AnalysisPage: FC<{ analyses: (Analysis & { data: Analysis_Data })[], label
       case "line":
         return <AnalysisLineChart data={JSON.parse(analysis.data?.data || '') as AnalysisLineChartProps['data']} />
       case "pie-pos":
-        return <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps['data']} labelData={props.labelData} onlyPositive={true}/>
-        case "pie-neg":
-          return <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps['data']} labelData={props.labelData} onlyPositive={false}/>
+        return <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps['data']} labelCatData={props.labelData} onlyPositive={true}/>
+      case "pie-neg":
+        return <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps['data']} labelCatData={props.labelData} onlyPositive={false}/>
+      case "pie-goal":
+        return <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps['data']} labelGoalData={props.goalData} onlyPositive={true}/>
       default:
         return <></>
     }
@@ -85,11 +88,6 @@ const AnalysisPage: FC<{ analyses: (Analysis & { data: Analysis_Data })[], label
       )}
       {analysisModules.map((analysis) => (
         <AnalysisCard key={analysis.id} name={analysis.name}>
-          {/* {analysis.type === 'pie' ? (
-            <AnalysisPieChart data={JSON.parse(analysis.data?.data || '') as AnalysisPieChartProps['data']} labelData={props.labelData} onlyPositive={true}/>
-          ) : (
-            <AnalysisLineChart data={JSON.parse(analysis.data?.data || '') as AnalysisLineChartProps['data']} />
-          )} */}
           {
             getAnalysis(analysis)
           }
@@ -107,9 +105,10 @@ export async function getServerSideProps(context: any) {
   });
 
   const labelData = await DBClient.category.findMany({include:{subscriptions: true}})
+  const goalData = await DBClient.goal.findMany()
 
   return {
-    props: { analyses: data, labelData: labelData },
+    props: { analyses: data, labelData: labelData, goalData: goalData },
   };
 }
 

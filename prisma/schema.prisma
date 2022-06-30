@@ -15,7 +15,7 @@ model Bank_Account {
   holder        String
   iban          String         @unique
   balance       Float
-  Analyses      Analysis?
+  Analyses      Analysis[]
   Goals         Goal[]
   Subscriptions Subscription[]
 }
@@ -24,8 +24,8 @@ model Analysis {
   id              String        @id @default(cuid())
   type            String
   name            String
-  bank_account_id String        @unique
-  data_id         String        @unique
+  bank_account_id String        
+  data_id         String        
   bank_account    Bank_Account  @relation(fields: [bank_account_id], references: [id])
   data            Analysis_Data @relation(fields: [data_id], references: [id])
 }
@@ -33,8 +33,8 @@ model Analysis {
 model Analysis_Data {
   id       String    @id @default(cuid())
   data     String?
-  analysis Analysis?
-  goal     Goal?
+  analysis Analysis[]
+  goal     Goal[]
 }
 
 model Category {

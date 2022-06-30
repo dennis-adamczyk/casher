@@ -3,16 +3,17 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData } from 'chart.js';
 import { useTheme } from 'styled-components';
 import { GetServerSideProps } from 'next';
-import { Category, Subscription } from '@prisma/client';
+import { Category, Goal, Subscription } from '@prisma/client';
 import { getIntervalMonthlyFactor } from '@/helpers/interval';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export interface AnalysisPieChartProps {
   data: ChartData<'doughnut', number[], string>;
-  labelData: (Category & {
+  labelCatData?: (Category & {
     subscriptions: Subscription[];
 })[],
+  labelGoalData?: Goal[],
   onlyPositive: boolean
 }
 
@@ -34,30 +35,37 @@ const cBgColors = [
   "rgba(255,159,64,0.3)"
 ]
 
-const AnalysisPieChart: FC<AnalysisPieChartProps> = ({ data, labelData, onlyPositive }) => {
+const AnalysisPieChart: FC<AnalysisPieChartProps> = ({ data, labelCatData, labelGoalData, onlyPositive }) => {
 
-  const getRandomVal = () => Math.floor(Math.random() * 255)
   const labels: string[] = []
   const datasetData: number[] = [] 
   const bgColors: string[] = []
   const borderColors: string[] = []
-
-
-  labelData.forEach((cat)=> {
-    const TotalSubForCat: number = cat.subscriptions.reduce((prev, current) => {
-      if(onlyPositive !== current.amount < 0){
-        return prev + (current.amount * getIntervalMonthlyFactor(current.interval))
-      }else{
-        return prev
+  if(labelCatData){
+    labelCatData.forEach((cat)=> {
+      const TotalSubForCat: number = cat.subscriptions.reduce((prev, current) => {
+        if(onlyPositive !== current.amount < 0){
+          return prev + (current.amount * getIntervalMonthlyFactor(current.interval))
+        }else{
+          return prev
+        }
+      },0)
+      if(TotalSubForCat !== 0){
+        labels.push(cat.name)
+        datasetData.push(TotalSubForCat)
       }
-    },0)
-    if(TotalSubForCat !== 0){
-      labels.push(cat.name)
-      datasetData.push(TotalSubForCat)
-    }
-  })
+    })
+  }else if(labelGoalData){
+    labelGoalData.forEach((Goal) => {
+      if(onlyPositive !== Goal.savings_amount < 0){
+        labels.push(Goal.name)
+        datasetData.push(Goal.savings_amount)
+      }
+    })
+  }
+  
 
-  labels.forEach((lbl, index: number)=>{
+  labels.forEach((_lbl, index: number)=>{
     bgColors.push(cBgColors[index % cBgColors.length])
     borderColors.push(cBorderColors[index % cBorderColors.length])
   })
