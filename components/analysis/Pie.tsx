@@ -80,8 +80,8 @@ const AnalysisPieChart: FC<AnalysisPieChartProps> = ({ data, labelCatData, label
   return (
     <Doughnut
       options={{
-        plugins: { legend: { position: 'left', labels: { color: theme.colors.body, font: { size: 16 } } } },
-        aspectRatio: 2,
+        plugins: { legend: { position: 'left', labels: { color: theme.colors.body, font: { size: 12 } } } },
+        aspectRatio: 1.5 / (labels.length / 9),
       }}
       data={data}
     />
