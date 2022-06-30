@@ -6,6 +6,7 @@ import GoalCard from '@/components/common/GoalCard';
 import AddGoalButton from '@/components/common/AddButton';
 import { DBClient } from '@/data/database';
 import { Goal } from '@prisma/client';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 const GoalTitle = styled.h2(
   css({
@@ -53,7 +54,7 @@ const Goals: FC<{ goals: Goal[] }> = ({ goals }) => {
   );
 };
 
-export default Goals;
+export default withPageAuthRequired(Goals);
 
 export async function getServerSideProps(context: any) {
   const goals = await DBClient.goal.findMany();

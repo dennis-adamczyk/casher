@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { Goal } from '@prisma/client';
 
 const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const intervalOptions = getAllSelectOptions();
   const [formData, setFormData] = useState<Partial<Goal>>({
     amount: 0,
@@ -34,8 +34,13 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
       body: JSON.stringify(formData),
     });
 
-    const content = await result.json();
-    console.log(content);
+    const { success } = await result.json();
+
+    if (success) {
+      push('/goals');
+    } else {
+      alert('Upsi! Da ist etwas schief gelaufen...');
+    }
   };
 
   return (
@@ -78,20 +83,20 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
         label="Intervall"
         options={intervalOptions}
       />
-      { accounts &&
+      {accounts && (
         <Select
-        onChange={(newValue: any) =>
-          setFormData((formData) => ({
-            ...formData,
-            bank_account_id: newValue.value,
-          }))
-        }
-        value={accounts.filter((option) => option.value === formData.bank_account_id)}
-        label="Konto"
-        options={accounts}
-      />
-      }
-      
+          onChange={(newValue: any) =>
+            setFormData((formData) => ({
+              ...formData,
+              bank_account_id: newValue.value,
+            }))
+          }
+          value={accounts.filter((option) => option.value === formData.bank_account_id)}
+          label="Konto"
+          options={accounts}
+        />
+      )}
+
       <AddFormButtons>
         <Button bg="midnight.500" type="button" onClick={() => back()} mr={4}>
           Abbrechen

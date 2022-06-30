@@ -8,9 +8,9 @@ import { GetBankNameSelectionOptions } from './BankCard';
 import Select from '../ui/Select';
 
 const AddCardForm: FC<AddFormProps> = ({ title }) => {
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const [formData, setFormData] = useState<Partial<Bank_Account>>({
-    user_id: "0",
+    user_id: '0',
   });
 
   const options = GetBankNameSelectionOptions();
@@ -25,12 +25,17 @@ const AddCardForm: FC<AddFormProps> = ({ title }) => {
     event.preventDefault();
     console.log(formData);
     const result = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/cards', {
-       method: 'POST',
-       body: JSON.stringify(formData),
+      method: 'POST',
+      body: JSON.stringify(formData),
     });
 
-    const content = await result.json();
-    console.log(content);
+    const { success } = await result.json();
+
+    if (success) {
+      push('/');
+    } else {
+      alert('Upsi! Da ist etwas schief gelaufen...');
+    }
   };
 
   return (

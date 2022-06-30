@@ -1,13 +1,14 @@
 import Content from '@/components/layout/Content';
 import type { NextPage } from 'next';
 import AddCardForm from '@/components/common/AddCardForm';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
-const NewCards: NextPage = (props) => {
+const NewCards: NextPage = () => {
   return (
     <Content>
-      <AddCardForm title="Neuer Bankaccount"/>
+      <AddCardForm title="Neuer Bankaccount" />
     </Content>
   );
 };
 
-export default NewCards;
+export default withPageAuthRequired(NewCards);

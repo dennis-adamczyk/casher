@@ -23,6 +23,7 @@ const GoalCardWrapper = styled.article<GoalCardWrapperPros>(({ backgroundColor =
     paddingY: 4,
     marginBottom: 4,
     position: 'relative',
+    cursor: 'pointer',
   }),
 );
 

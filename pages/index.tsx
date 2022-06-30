@@ -8,6 +8,7 @@ import { Bank_Account } from '@prisma/client';
 import css from '@styled-system/css';
 import type { NextPage } from 'next';
 import styled from 'styled-components';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 const AccountsSection = styled.section(css({}));
 
@@ -72,7 +73,7 @@ const Home: NextPage<{
           />
         ))}
 
-        <AddAcountButton href="/cards/new" mr={4} >Neues Konto</AddAcountButton>
+        <AddAcountButton href="/cards/new">Neues Konto</AddAcountButton>
       </AccountsSection>
     </Content>
   );
@@ -128,4 +129,4 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-export default Home;
+export default withPageAuthRequired(Home);

@@ -3,6 +3,7 @@ import Content from '@/components/layout/Content';
 import { SelectOption } from '@/helpers/selectOptions';
 import { DBClient } from '@/data/database';
 import type { GetServerSideProps, NextPage } from 'next';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 export interface AddSubscriptionsProps {
   accounts: SelectOption[];
@@ -32,4 +33,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-export default Subscriptions;
+export default withPageAuthRequired(Subscriptions);

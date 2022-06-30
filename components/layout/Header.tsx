@@ -9,17 +9,25 @@ import Link from 'next/link';
 
 const HeaderWrapper = styled.header(({ theme }) =>
   css({
+    position: 'sticky',
+    top: 0,
+    height: 10,
+    backgroundColor: rgba(theme.colors.midnight[800], 0.96),
+    zIndex: 10,
+  }),
+);
+
+const HeaderContent = styled.div(({ theme }) =>
+  css({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    position: 'sticky',
-    top: 0,
     paddingX: 4,
     paddingY: 2,
-    height: 10,
-    backgroundColor: rgba(theme.colors.midnight[800], 0.96),
-    zIndex: 10,
+    width: '100%',
+    maxWidth: theme.breakpoints.medium,
+    marginX: 'auto',
   }),
 );
 
@@ -40,17 +48,19 @@ interface HeaderProps {}
 const Header: FC<HeaderProps> = () => {
   return (
     <HeaderWrapper>
-      <Link href="/" passHref>
-        <LogoLink>
-          <Image src={logo} alt="Casher" />
-        </LogoLink>
-      </Link>
+      <HeaderContent>
+        <Link href="/" passHref>
+          <LogoLink>
+            <Image src={logo} alt="Casher" />
+          </LogoLink>
+        </Link>
 
-      <Link href="/profile" passHref>
-        <ProfilePictureLink>
-          <ProfilePicture />
-        </ProfilePictureLink>
-      </Link>
+        <Link href="/profile" passHref>
+          <ProfilePictureLink>
+            <ProfilePicture />
+          </ProfilePictureLink>
+        </Link>
+      </HeaderContent>
     </HeaderWrapper>
   );
 };

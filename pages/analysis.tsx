@@ -10,6 +10,7 @@ import AnalysisPieChart, { AnalysisPieChartProps } from '@/components/analysis/P
 import AnalysisLineChart, { AnalysisLineChartProps } from '@/components/analysis/Line';
 import { DBClient } from '@/data/database';
 import { Analysis, Analysis_Data } from '@prisma/client';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 const EmptyWrapper = styled.div(
   css({
@@ -94,4 +95,4 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-export default AnalysisPage;
+export default withPageAuthRequired(AnalysisPage);

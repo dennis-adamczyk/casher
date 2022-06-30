@@ -2,8 +2,9 @@ import { getIntervalMonthlyFactor } from '@/helpers/interval';
 import { DBClient } from '@/data/database';
 import { apiError } from '@/helpers/apiErrorHandler';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 
-export default async function handler(
+export default withApiAuthRequired(async function handler(
   req: NextApiRequest,
   res: NextApiResponse<{ bankAccountId: string; totalMonthlySavings: number }>,
 ) {
@@ -20,4 +21,4 @@ export default async function handler(
   } catch (error) {
     apiError(error, res);
   }
-}
+});

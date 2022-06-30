@@ -1,9 +1,10 @@
 import { DBClient } from '@/data/database';
 import { apiError } from '@/helpers/apiErrorHandler';
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { Category, Subscription } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(
+export default withApiAuthRequired(async function handler(
   req: NextApiRequest,
   res: NextApiResponse<(Category & { subscriptions: Subscription[] })[]>,
 ) {
@@ -13,4 +14,4 @@ export default async function handler(
   } catch (error) {
     apiError(error, res);
   }
-}
+});

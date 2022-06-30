@@ -2,8 +2,9 @@ import { getIntervalMonthlyFactor } from '@/helpers/interval';
 import { DBClient } from '@/data/database';
 import { apiError } from '@/helpers/apiErrorHandler';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<number>) {
+export default withApiAuthRequired(async function handler(req: NextApiRequest, res: NextApiResponse<number>) {
   try {
     const subs = await DBClient.subscription.findMany();
     const totalMonthlySubCost = subs.reduce(
@@ -14,4 +15,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } catch (error) {
     apiError(error, res);
   }
-}
+});

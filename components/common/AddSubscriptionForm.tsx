@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { Subscription } from '@prisma/client';
 
 const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts, categories }) => {
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const intervalOptions = getAllSelectOptions();
   const [formData, setFormData] = useState<Partial<Subscription>>({
     amount: 0,
@@ -26,17 +26,22 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts, categories }) 
   const onSubmit = async (event: any) => {
     event.preventDefault();
     console.log(formData);
-     const result = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/subscription', {
-       method: 'POST',
+    const result = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/subscription', {
+      method: 'POST',
       body: JSON.stringify(formData),
     });
 
-    const content = await result.json();
-    console.log(content);
+    const { success } = await result.json();
+
+    if (success) {
+      push('/subscriptions');
+    } else {
+      alert('Upsi! Da ist etwas schief gelaufen...');
+    }
   };
 
   return (
-<AddFormWrapper onSubmit={onSubmit}>
+    <AddFormWrapper onSubmit={onSubmit}>
       <AddFormTitle>{title}</AddFormTitle>
       <Input onChange={changeFormData('name')} value={formData.name} label="Name des Ziels" />
       <Input
@@ -44,6 +49,7 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts, categories }) 
         value={formData.amount}
         label="Reguläre kosten"
         suffix="€"
+        min={0}
         step="0.01"
         type="number"
       />
@@ -58,34 +64,33 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts, categories }) 
         label="Intervall"
         options={intervalOptions}
       />
-      { categories &&
+      {categories && (
         <Select
-        onChange={(newValue: any) =>
-          setFormData((formData) => ({
-            ...formData,
-            category_id: newValue.value,
-          }))
-        }
-        value={categories.filter((option) => option.value === formData.category_id)}
-        label="Kategorie"
-        options={categories}
-      />
-      }
-      {
-        accounts && 
-        <Select
-        onChange={(newValue: any) =>
-          setFormData((formData) => ({
-            ...formData,
-            bank_account_id: newValue.value,
-          }))
-        }
-        value={accounts.filter((option) => option.value === formData.bank_account_id)}
-        label="Konto"
-        options={accounts}
+          onChange={(newValue: any) =>
+            setFormData((formData) => ({
+              ...formData,
+              category_id: newValue.value,
+            }))
+          }
+          value={categories.filter((option) => option.value === formData.category_id)}
+          label="Kategorie"
+          options={categories}
         />
-      }
-      
+      )}
+      {accounts && (
+        <Select
+          onChange={(newValue: any) =>
+            setFormData((formData) => ({
+              ...formData,
+              bank_account_id: newValue.value,
+            }))
+          }
+          value={accounts.filter((option) => option.value === formData.bank_account_id)}
+          label="Konto"
+          options={accounts}
+        />
+      )}
+
       <AddFormButtons>
         <Button bg="midnight.500" type="button" onClick={() => back()} mr={4}>
           Abbrechen

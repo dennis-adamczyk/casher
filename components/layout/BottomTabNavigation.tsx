@@ -26,18 +26,27 @@ const BottomTabNavigationItem = styled.a<BottomTabNavigationItemProps>(({ theme,
 
 const BottomTabNavigationWrapper = styled.nav(({ theme }) =>
   css({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'stretch',
     position: 'fixed',
     left: 0,
     right: 0,
     bottom: 0,
     height: 11,
     backgroundColor: rgba(theme.colors.midnight[800], 0.96),
-    color: 'white.default',
     zIndex: 10,
+  }),
+);
+
+const BottomTabNavigationContent = styled.div(({ theme }) =>
+  css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'stretch',
+    color: 'white.default',
+    height: '100%',
+    width: '100%',
+    maxWidth: theme.breakpoints.medium,
+    marginX: 'auto',
   }),
 );
 
@@ -54,13 +63,15 @@ const BottomTabNavigation: FC<BottomTabNavigationProps> = ({ items }) => {
 
   return (
     <BottomTabNavigationWrapper>
-      {items?.map((item) => (
-        <Link href={item.href} passHref key={item.name}>
-          <BottomTabNavigationItem title={item.name} active={item.href === pathname}>
-            {item.icon}
-          </BottomTabNavigationItem>
-        </Link>
-      ))}
+      <BottomTabNavigationContent>
+        {items?.map((item) => (
+          <Link href={item.href} passHref key={item.name}>
+            <BottomTabNavigationItem title={item.name} active={item.href === pathname}>
+              {item.icon}
+            </BottomTabNavigationItem>
+          </Link>
+        ))}
+      </BottomTabNavigationContent>
     </BottomTabNavigationWrapper>
   );
 };
