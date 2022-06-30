@@ -126,12 +126,6 @@ type Bank = {
 };
 
 const banks = {
-  placeholder: {
-    name: 'Placeholder',
-    color: '#00ff62',
-    logo: sparkasseLogo,
-    textAlignment: 'baseline',
-  } as Bank,
   sparkasse: {
     name: 'Sparkasse',
     color: '#FE0000',
