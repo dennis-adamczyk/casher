@@ -22,6 +22,6 @@ export const AddFormButtons = styled.div(
 
 export interface AddFormProps {
   title: string;
-  accounts: SelectOption[];
+  accounts?: SelectOption[];
   categories?: SelectOption[];
 }

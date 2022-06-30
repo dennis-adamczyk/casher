@@ -71,17 +71,21 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts, categories }) 
         options={categories}
       />
       }
-      <Select
-      onChange={(newValue: any) =>
-        setFormData((formData) => ({
-          ...formData,
-          bank_account_id: newValue.value,
-        }))
+      {
+        accounts && 
+        <Select
+        onChange={(newValue: any) =>
+          setFormData((formData) => ({
+            ...formData,
+            bank_account_id: newValue.value,
+          }))
+        }
+        value={accounts.filter((option) => option.value === formData.bank_account_id)}
+        label="Konto"
+        options={accounts}
+        />
       }
-      value={accounts.filter((option) => option.value === formData.bank_account_id)}
-      label="Konto"
-      options={accounts}
-    />
+      
       <AddFormButtons>
         <Button bg="midnight.500" type="button" onClick={() => back()} mr={4}>
           Abbrechen
