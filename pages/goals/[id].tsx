@@ -150,7 +150,12 @@ type data = Goal & {
 const GoalPage: FC<{ goal: data }> = ({ goal }) => {
   const [remainingDays, setRemainingDays] = useState(calculateRemainingDays(goal, goal.savings_interval));
   const [remainingMonths, setRemainingMonths] = useState(calculateRemainingMonths(goal, goal.savings_interval));
-  const history: GoalHistory = JSON.parse(goal.history.values) as GoalHistory;
+  let history : GoalHistory | undefined
+  
+  if (goal.history != undefined){
+    history = JSON.parse(goal.history.values) as GoalHistory;
+
+  }
 
   return (
     <Content>
@@ -166,7 +171,10 @@ const GoalPage: FC<{ goal: data }> = ({ goal }) => {
           hideChevron
         />
       </GoalTitle>
-      <AnalysisLineChart data={JSON.parse(goal.analysis_data.data || '') as AnalysisLineChartProps['data']} />
+      {
+        (goal.analysis_data != undefined) && <AnalysisLineChart data={JSON.parse(goal.analysis_data.data || '') as AnalysisLineChartProps['data']} />
+      
+      }
       <GoalRegularSpending>
         <GoalRegularSpendingText>{formatCurrency(goal.savings_amount)}</GoalRegularSpendingText>
         <Select
@@ -193,14 +201,14 @@ const GoalPage: FC<{ goal: data }> = ({ goal }) => {
       </GoalExpectedFinisherTimerWrapper>
 
       <GoalPastSavingsHeader>Einzahlungen</GoalPastSavingsHeader>
-      {history.reverse().map((record, index) => (
+      {(history != undefined ) && (history.reverse().map((record, index) => (
         <GoalPastSavingsItem key={index}>
           <GoalPastSavingsItemDate>{formatDate(new Date(record.date))}</GoalPastSavingsItemDate>
           <GoalPastSavingsItemAmount negative={record.value < 0}>
             {formatCurrency(record.value)}
           </GoalPastSavingsItemAmount>
         </GoalPastSavingsItem>
-      ))}
+      )))}
     </Content>
   );
 };

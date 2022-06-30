@@ -59,7 +59,7 @@ model Goal {
   savings_interval Int
   analysis_data_id String?        @unique
   bank_account_id  String
-  history_id       String?        @unique @default("-1")
+  history_id       String?        @unique
   analysis_data    Analysis_Data? @relation(fields: [analysis_data_id], references: [id])
   bank_account     Bank_Account   @relation(fields: [bank_account_id], references: [id])
   history          Goal_History?  @relation(fields: [history_id], references: [id])

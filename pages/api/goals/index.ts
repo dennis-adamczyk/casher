@@ -10,13 +10,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       res.status(200).json(goals);
     } else if (req.method == 'POST') {
       const newGoal = JSON.parse(req.body) as Goal;
-      // newGoal.bank_account = { connect: newGoal.bank_account_id };
       console.log(
         await DBClient.goal.create({
-          data: newGoal,
-          include: {
-            bank_account: true,
-          },
+          data: newGoal
         }),
       );
       console.log(newGoal);
