@@ -1,12 +1,12 @@
 import { DBClient } from '@/data/database';
-import { apiError } from '@/helpers/apiErrorHandler';
+import { apiError, SuccessResponse } from '@/helpers/apiErrorHandler';
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { Category } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withApiAuthRequired(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Category[] | null>,
+  res: NextApiResponse<Category[] | SuccessResponse>,
 ) {
   try {
     if (req.method == 'GET') {
@@ -20,7 +20,7 @@ export default withApiAuthRequired(async function handler(
         }),
       );
       console.log(newCategory);
-      res.status(200).json([]);
+      res.status(200).json({ success: true });
     }
   } catch (error) {
     apiError(error, res);

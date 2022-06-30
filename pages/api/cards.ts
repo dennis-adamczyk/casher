@@ -1,12 +1,12 @@
 import { DBClient } from '@/data/database';
-import { apiError } from '@/helpers/apiErrorHandler';
+import { apiError, SuccessResponse } from '@/helpers/apiErrorHandler';
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { Bank_Account } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withApiAuthRequired(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Bank_Account[] | null>,
+  res: NextApiResponse<Bank_Account[] | SuccessResponse>,
 ) {
   try {
     if (req.method == 'GET') {
@@ -16,12 +16,10 @@ export default withApiAuthRequired(async function handler(
       const newBankAccount = JSON.parse(req.body) as Bank_Account;
       console.log(newBankAccount);
 
-      console.log(
-        await DBClient.bank_Account.create({
-          data: newBankAccount,
-        }),
-      );
-      res.status(200).json(null);
+      await DBClient.bank_Account.create({
+        data: newBankAccount,
+      });
+      res.status(200).json({ success: true });
     }
   } catch (error) {
     apiError(error, res);

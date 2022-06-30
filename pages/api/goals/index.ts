@@ -1,10 +1,13 @@
 import { DBClient } from '@/data/database';
-import { apiError } from '@/helpers/apiErrorHandler';
+import { apiError, SuccessResponse } from '@/helpers/apiErrorHandler';
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { Goal } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default withApiAuthRequired(async function handler(req: NextApiRequest, res: NextApiResponse<Goal[]>) {
+export default withApiAuthRequired(async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Goal[] | SuccessResponse>,
+) {
   try {
     if (req.method == 'GET') {
       const goals = await DBClient.goal.findMany();
@@ -17,7 +20,7 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
         }),
       );
       console.log(newGoal);
-      res.status(200).json([]);
+      res.status(200).json({ success: true });
     }
   } catch (error) {
     apiError(error, res);
