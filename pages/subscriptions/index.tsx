@@ -74,6 +74,13 @@ const SubscriptionCollapseCard = styled(SubscriptionCard)(
   }),
 );
 
+const AddButtonWrapper = styled.div(css({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+}))
+
 type data = (Category & {
   subscriptions: Subscription[];
 })[];
@@ -98,7 +105,10 @@ const Subscriptions: NextPage<{ categories: data; totalSubscriptionCost: number 
           ))}
         </SubscriptionCollapse>
       ))}
-      <AddSubscriptionButton href="/subscriptions/new">Neues Abo</AddSubscriptionButton>
+      <AddButtonWrapper>
+        <AddSubscriptionButton href="/category/new" mr={4}>Neue Kategorie</AddSubscriptionButton>
+        <AddSubscriptionButton href="/subscriptions/new" mr={4}>Neues Abo</AddSubscriptionButton>  
+      </AddButtonWrapper>
     </Content>
   );
 };

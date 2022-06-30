@@ -8,6 +8,7 @@ import { rgba } from 'polished';
 import { FC } from 'react';
 import styled from 'styled-components';
 import { margin, MarginProps } from 'styled-system';
+import { SelectOption } from '@/helpers/selectOptions';
 
 interface CardWrapperProps extends MarginProps {
   color?: string;
@@ -152,6 +153,12 @@ const banks = {
 };
 
 export type BankName = keyof typeof banks;
+
+export function GetBankNameSelectionOptions(): SelectOption[] {
+  return Object.keys(banks).map((bank)=>{
+      return {label: banks[bank as keyof typeof banks].name, value: bank}
+    })
+}
 
 interface BankCardData {
   id: number;

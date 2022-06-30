@@ -78,7 +78,8 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
         label="Intervall"
         options={intervalOptions}
       />
-      <Select
+      { accounts &&
+        <Select
         onChange={(newValue: any) =>
           setFormData((formData) => ({
             ...formData,
@@ -89,6 +90,8 @@ const AddSubscriptionForm: FC<AddFormProps> = ({ title, accounts }) => {
         label="Konto"
         options={accounts}
       />
+      }
+      
       <AddFormButtons>
         <Button bg="midnight.500" type="button" onClick={() => back()} mr={4}>
           Abbrechen
