@@ -63,7 +63,7 @@ const SubscriptionCardAmount = styled.p<SubscriptionCardAmountProps>(({ positive
     fontWeight: 'medium',
     textAlign: 'right',
     lineHeight: 'body',
-    color: positive ? 'blue.200' : 'white.default',
+    color: positive ? 'blue.200' : 'red.opacity.8',
   }),
 );
 
@@ -89,7 +89,7 @@ const SubscriptionCard: FC<SubscriptionCardProps> = ({ name, amount, interval, b
         <SubscriptionCardBankName>{bank_name}</SubscriptionCardBankName>
       </SubscriptionCardNameWrapper>
       <SubscriptionCardAmountWrapper>
-        <SubscriptionCardAmount positive={amount > 0}>{formatCurrency(Math.abs(amount))}</SubscriptionCardAmount>
+        <SubscriptionCardAmount positive={amount > 0}>{formatCurrency((amount))}</SubscriptionCardAmount>
         <SubscriptionCardAmountInterval>{getIntervalCaption(interval)}</SubscriptionCardAmountInterval>
       </SubscriptionCardAmountWrapper>
     </SubscriptionCardWrapper>
