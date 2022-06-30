@@ -1,6 +1,6 @@
 # Casher
 
-Casher is a Software as a Service solution that provides a Usercentric 
+Casher is a Software as a Service solution that provides a usercentric, bulletproof, typesafe, valid, battletested, blazingly fast, serverside-renderd, Progressive-Web-App (PWA) which, with the help of a centrelised AI-Service, automatically analyzes realtime Finance Big Data and provides the user with actionable Analytics. 
 
 ## Getting Started
 
