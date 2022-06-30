@@ -90,6 +90,7 @@ const Select = forwardRef<any, SelectProps>(({ label, ...props }, ref) => {
     menu: (provided) => ({
       ...provided,
       backgroundColor: theme.colors.midnight[500],
+      zIndex: 15
     }),
     option: (provided, state) => ({
       ...provided,
@@ -131,6 +132,7 @@ const Select = forwardRef<any, SelectProps>(({ label, ...props }, ref) => {
         styles={customStyles}
         id={id}
         ref={ref}
+        menuPlacement={'auto'}
       />
     </SelectSetWrapper>
   );
