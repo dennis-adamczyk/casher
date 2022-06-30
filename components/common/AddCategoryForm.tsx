@@ -2,7 +2,6 @@ import { ChangeEventHandler, FC, useState } from 'react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import { AddFormProps, AddFormWrapper, AddFormTitle, AddFormButtons } from './AddForm';
-import { getAllSelectOptions } from '@/helpers/interval';
 import { useRouter } from 'next/router';
 import { Category, Goal } from '@prisma/client';
 

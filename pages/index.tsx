@@ -72,7 +72,7 @@ const Home: NextPage<{
           />
         ))}
 
-        <AddAcountButton>Neues Konto</AddAcountButton>
+        <AddAcountButton href="/cards/new" mr={4} >Neues Konto</AddAcountButton>
       </AccountsSection>
     </Content>
   );
